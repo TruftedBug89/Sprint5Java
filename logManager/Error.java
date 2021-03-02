@@ -1,12 +1,12 @@
-package Sprint4Java.logManager;
+package Sprint5Java.logManager;
 
-import Sprint4Java.files.LogFiles;
+import Sprint5Java.files.LogFiles;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 /**
- * Grup 1 Sprint 4 2020-2021 - Alberto Dos Santos
+ * Grup 2 Sprint 5 2020-2021 - Alberto Dos Santos
  * Aquesta classe crea els logs i els guarda al arxiu una vegada s'ha cridat el mètode
  */
 public class Error {

@@ -1,12 +1,14 @@
-package Sprint4Java;
+package Sprint5Java;
 
-import Sprint4Java.files.LoadConfig;
-import Sprint4Java.modules.*;
-import Sprint4Java.views.Finestra;
-import Sprint4Java.views.PanelMenu;
+import Sprint5Java.files.LoadConfig;
+import Sprint5Java.controllers.*;
+import Sprint5Java.views.Finestra;
+import Sprint5Java.views.PanelMenu;
+
+import java.util.HashMap;
 
 /**
- * Grup 1 Sprint 4 2020-2021 - Isaac Brull, Josep López, Andrei Halauca, Alberto Dos Santos
+ * Grup 2 Sprint 5 2020-2021 - David Falcó, Anwar El Khattabi, Sofian Didouh, Alberto Dos Santos
  */
 
 public class Main {
@@ -20,15 +22,12 @@ public class Main {
      * @param args
      */
     public static void main(String[] args) {
-        GestorCategoria GCategoria = new GestorCategoria();
-        GestorEmpresa GEmpresa = new GestorEmpresa(10);
-        GestorIncidencia GIncidencia = new GestorIncidencia(10);
-        GestorInstitut GInstitut = new GestorInstitut(10);
-        ModulsGestors MGestors = new ModulsGestors(GCategoria, GEmpresa, GIncidencia, GInstitut);
-        Finestra frame = new Finestra(ALTURA, AMPLADA, NOM_FINESTRA, LoadConfig.loadConfig());
+        HashMap<String,String> loadedConfig = LoadConfig.loadConfig();
+        MainController MGestors = new MainController(loadedConfig);
+        Finestra frame = new Finestra(ALTURA, AMPLADA, NOM_FINESTRA, loadedConfig);
         PanelMenu menu = new PanelMenu(frame, MGestors);//la classe s'encarrega de posar el panel al frame
 
-
     }
+
 }
 

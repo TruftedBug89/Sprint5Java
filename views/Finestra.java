@@ -1,9 +1,10 @@
-package Sprint4Java.views;
+package Sprint5Java.views;
 
 import javax.swing.*;
+import java.util.HashMap;
 
 /**
- * Grup 1 Sprint 4 2020-2021 - Isaac Brull, Josep López, Andrei Halauca, Alberto Dos Santos
+ * Grup 2 Sprint 5 2020-2021 - David Falcó, Anwar El Khattabi, Sofian Didouh, Alberto Dos Santos
  * Clase Finestra: Administra JFrame i conte mètodes per autoconfigurar-lo i canviar panels
  */
 public class Finestra extends JFrame {
@@ -20,10 +21,11 @@ public class Finestra extends JFrame {
      * @param nomFinestra  String nom que surtira a la part superior de la finestra
      * @param loadedConfig aquestes dades es sobreescriuen si hi hes el fitxer de configuracio ple
      */
-    public Finestra(int altura, int amplada, String nomFinestra, String[] loadedConfig) {
-        this.finestraHeight = (loadedConfig == null) ? altura : Integer.parseInt(loadedConfig[1].split("x")[0].replace("\"", "").trim());
-        this.finestraWidth = (loadedConfig == null) ? amplada : Integer.parseInt(loadedConfig[1].split("x")[1].replace("\"", "").trim());
-        this.finestraName = (loadedConfig == null) ? nomFinestra : loadedConfig[0].split("=")[1].replace("\"", "").trim();
+    public Finestra(int altura, int amplada, String nomFinestra, HashMap<String,String> loadedConfig) {
+        System.out.println("finestra  req "+loadedConfig.get("db.password"));
+        this.finestraHeight = (loadedConfig.get("window.size") == null) ? altura : Integer.parseInt(loadedConfig.get("window.size").split("x")[0]);
+        this.finestraWidth = (loadedConfig.get("window.size") == null) ? amplada : Integer.parseInt(loadedConfig.get("window.size").split("x")[1]);
+        this.finestraName = (loadedConfig == null) ? nomFinestra : loadedConfig.get("window.name");
         this.configFrame();
     }
 

@@ -1,24 +1,24 @@
-package Sprint4Java.views;
+package Sprint5Java.views;
 
-import Sprint4Java.modules.ModulsGestors;
+import Sprint5Java.controllers.MainController;
 
 import javax.swing.*;
 import java.awt.*;
 
 /**
- * Grup 1 Sprint 4 2020-2021 - Isaac Brull, Josep López, Andrei Halauca, Alberto Dos Santos
+ * Grup 2 Sprint 5 2020-2021 - David Falcó, Anwar El Khattabi, Sofian Didouh, Alberto Dos Santos
  * Classe que s'esten de JPanel per a formar el menu del programa
  */
 public class PanelMenu extends JPanel {
     Finestra finestra;
-    ModulsGestors MGestors;
+    MainController MGestors;
 
     /**
      * Constructor per a crear un menu
      * @param frame Marcar-li a quina finestra te que aplicar el menu
      * @param MGestors
      */
-    public PanelMenu(Finestra frame, ModulsGestors MGestors) {
+    public PanelMenu(Finestra frame, MainController MGestors) {
         this.finestra = frame;
         this.MGestors = MGestors;
         this.generarMenu();
@@ -31,14 +31,14 @@ public class PanelMenu extends JPanel {
 
         GridLayout distribucio = new GridLayout(5, 1);
         this.setLayout(distribucio);
-        JButton panelCategoria = new JButton("Gestio de Categories");
-        panelCategoria.addActionListener(e -> new PanelCategoria(this.finestra,MGestors));
-        JButton panelEmpresa = new JButton("Gestio d'Empreses");
-        panelEmpresa.addActionListener(e -> new PanelEmpresa(this.finestra,MGestors));
-        JButton panelIncidencia = new JButton("Gestio d'Incidencies");
-        panelIncidencia.addActionListener(e -> new PanelIncidencia(this.finestra,MGestors));
-        JButton panelInstitut = new JButton("Gestió d'instituts");
-        panelInstitut.addActionListener(e -> new PanelInstitut(this.finestra,MGestors));
+        JButton panelCategoria = new JButton("Gestio de Matricules");
+//        panelCategoria.addActionListener(e -> new PanelCategoria(this.finestra,MGestors));
+        JButton panelEmpresa = new JButton("Gestio d'Alumnes");
+//        panelEmpresa.addActionListener(e -> new PanelEmpresa(this.finestra,MGestors));
+        JButton panelIncidencia = new JButton("Gestio de Professors");
+//        panelIncidencia.addActionListener(e -> new PanelIncidencia(this.finestra,MGestors));
+        JButton panelInstitut = new JButton("Gestió de Grups");
+//        panelInstitut.addActionListener(e -> new PanelInstitut(this.finestra,MGestors));
         JButton exit = new JButton("Sortir");
         exit.addActionListener(e -> this.finestra.dispose());
         this.add(panelCategoria);

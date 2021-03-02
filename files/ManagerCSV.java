@@ -1,7 +1,7 @@
-package Sprint4Java.files;
+package Sprint5Java.files;
 
-import Sprint4Java.logManager.Error;
-import Sprint4Java.logManager.Log;
+import Sprint5Java.logManager.Error;
+import Sprint5Java.logManager.Log;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -13,13 +13,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 /**
- * Grup 1 Sprint 4 2020-2021 - Alberto Dos Santos
+ * Grup 2 Sprint 5 2020-2021 - Alberto Dos Santos
  * Aquesta clase gestiona l'exportacio i importacio d'arxius CSV
  */
 public class ManagerCSV {
     private static boolean idePath;//variable que li diu al programa si les rutes
     //- seran per a executar desde un ide o desde un jar
-    private static final String csvPathLocation = "src/Sprint4Java/Exports";
+    private static final String csvPathLocation = "src/Sprint5Java/Exports";
     private static final String csvAlternativePath = "Exports";
 
     /**

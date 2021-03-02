@@ -1,11 +1,11 @@
-package Sprint4Java.files;
+package Sprint5Java.files;
 
-import Sprint4Java.logManager.Error;
+import Sprint5Java.logManager.Error;
 
 import java.io.*;
 
 /**
- * Grup 1 Sprint 4 2020-2021 - Alberto Dos Santos
+ * Grup 2 Sprint 5 2020-2021 - Alberto Dos Santos
  * Classe que gestiona l'escriptura i lectura dels fitxers de Logs
  */
 public class LogFiles {
@@ -13,7 +13,7 @@ public class LogFiles {
     //- seran per a executar desde un ide o desde un jar
     private static final String logFileName = "/logs.txt";
     private static final String errorFileName = "/error.txt";
-    private static final String logPathLocation = "src/Sprint4Java/Logs";
+    private static final String logPathLocation = "src/Sprint5Java/Logs";
     private static final String logAlternativePath = "Logs";
 
     /**
