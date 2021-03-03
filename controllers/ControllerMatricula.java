@@ -2,19 +2,32 @@ package Sprint5Java.controllers;
 
 
 import Sprint5Java.logManager.Log;
+import Sprint5Java.models.Matricula;
 
 import java.sql.*;
 import java.util.HashMap;
 
 /**
  * Grup 2 Sprint 5 2020-2021 - Alberto Dos Santos
- * Classe GestorMatricula, Aquesta conté l'array on s'emmagatzemen els objectes tipus Matricula, també conte diferents mètodes útils
+ * Classe ControllerMatricula, Aquesta conté l'array on s'emmagatzemen els objectes tipus Matricula, també conte diferents mètodes útils
  */
 public class ControllerMatricula {
 
-
+//try {
+//        this.connexioBD = DriverManager.getConnection("jdbc:mysql://localhost/" + dbParam.get("db.database"), dbParam.get("db.user"), dbParam.get("db.password"));
+//        Statement sentencia = this.connexioBD.createStatement();
+//        ResultSet resultado = sentencia.executeQuery("select * from matriculas;");
+//        while (resultado.next()) {
+//            contadorMatricules++;
+//        }
+//
+//    } catch (SQLException e) {
+//        e.printStackTrace();
+//        Log.log("Error al connectar a la BD desde les dades de config", "ControllerMatricula");
+//    }
     private Connection connexioBD;
     private int contadorMatricules = 0;
+    private static final String DBTableName = "matriculas";
 
     /**
      * Constructor que inicia l'array
@@ -23,16 +36,16 @@ public class ControllerMatricula {
         try {
             this.connexioBD = DriverManager.getConnection("jdbc:mysql://localhost/" + dbParam.get("db.database"), dbParam.get("db.user"), dbParam.get("db.password"));
             Statement sentencia = this.connexioBD.createStatement();
-            ResultSet resultado = sentencia.executeQuery("select * from categorias;");
-            while(resultado.next()){
-                System.out.println(resultado.getString(1)+" "+resultado.getString(2));
+            ResultSet resultado = sentencia.executeQuery("select * from "+DBTableName);
+            while (resultado.next()) {
+                this.contadorMatricules++;
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
-            Log.log("Error al connectar a la BD desde les dades de config", "GestorMatricula");
+            Log.log("Error al connectar a la BD desde les dades de config", "ControllerMatricula");
         }
-        Log.log("S'ha accedit al gestor de Matricules", "GestorMatricula");
+        Log.log("S'ha accedit al Controller de Matricules", "ControllerMatricula");
 
     }
 
@@ -68,13 +81,30 @@ public class ControllerMatricula {
 //            e.printStackTrace();
 //        }
 //    }
+
     /**
      * Dona d'alta una Matricula posant-la al array, retona true si es fa correctament, false si no
      *
-     * @param nom        nom de la nova Matricula
-     * @param descripcio descripcio de la nova Matricula
+     * @param matriculaAlta
      */
-//    public boolean altaMatricula(String nom, String descripcio) {
+    public boolean altaMatricula(Matricula matriculaAlta) {
+        try {
+            Statement sentencia = this.connexioBD.createStatement();
+            ResultSet resultado = sentencia.executeQuery("INSERT INTO matriculas (id_grup, id_alumne, data_matriculat, data_desmatriculat, estat) VALUES ("+matriculaAlta.getId_grup()+","+matriculaAlta.getId_alumne()+","+matriculaAlta.getData_matriculat()+","+matriculaAlta.getData_desmatriculat()+","+matriculaAlta.getEstat()+";");
+            System.out.println("INSERT INTO matriculas (id_grup, id_alumne, data_matriculat, data_desmatriculat, estat) VALUES ("+matriculaAlta.getId_grup()+","+matriculaAlta.getId_alumne()+","+matriculaAlta.getData_matriculat()+","+matriculaAlta.getData_desmatriculat()+","+matriculaAlta.getEstat()+";");
+
+            while (resultado.next()) {
+                System.out.println(resultado.getRow());
+            }
+            this.contadorMatricules++;
+            return true;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            Log.log("Error al donar d'alta una matricula", "ControllerMatricula");
+            return false;
+        }
+
 //        int contador = 0;
 //        for (Matricula cat : this.ArrayMatricules) {
 //            if (cat.getNom().trim().equals(nom.trim())) {
@@ -91,9 +121,32 @@ public class ControllerMatricula {
 //            Error.log("No s'ha pogut introduir Matricula al array espais ocupats :" + contador + "/" + ArrayMatricules.size(), "AltaMatricula");
 //            return false;
 //        }
-//
-//    }
 
+    }
+    public String[][] getDataTable(){
+        int numberOfFields = 6;
+        String[][] tableData = new String[this.contadorMatricules][numberOfFields];
+        try {
+            Statement sentencia = this.connexioBD.createStatement();
+            ResultSet resultado = sentencia.executeQuery("select * from "+DBTableName);
+            int tableCounter = 0;
+            while (resultado.next()) {
+
+                for (int i = 0; i < numberOfFields; i++) {
+                    tableData[tableCounter][i] = resultado.getString(i+1);//+1 perque el getString(int) comença desde 1 i no desde 0
+                }
+                tableCounter++;
+            }
+            return tableData;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            Log.log("Error al crear la taula amb les dades (getdatatable)", "ControllerMatricula");
+            tableData[0][0] = "ERROR DB";
+            return tableData;
+        }
+
+    }
     /**
      * Aquest mètode elimina una Matricula basant-se de la ID que té
      *

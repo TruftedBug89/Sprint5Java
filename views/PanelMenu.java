@@ -11,7 +11,7 @@ import java.awt.*;
  */
 public class PanelMenu extends JPanel {
     Finestra finestra;
-    MainController MGestors;
+    MainController MainController;
 
     /**
      * Constructor per a crear un menu
@@ -20,7 +20,7 @@ public class PanelMenu extends JPanel {
      */
     public PanelMenu(Finestra frame, MainController MGestors) {
         this.finestra = frame;
-        this.MGestors = MGestors;
+        this.MainController = MGestors;
         this.generarMenu();
     }
 
@@ -32,7 +32,7 @@ public class PanelMenu extends JPanel {
         GridLayout distribucio = new GridLayout(5, 1);
         this.setLayout(distribucio);
         JButton panelCategoria = new JButton("Gestio de Matricules");
-//        panelCategoria.addActionListener(e -> new PanelCategoria(this.finestra,MGestors));
+        panelCategoria.addActionListener(e -> new PanelMatricula(this.finestra, MainController));
         JButton panelEmpresa = new JButton("Gestio d'Alumnes");
 //        panelEmpresa.addActionListener(e -> new PanelEmpresa(this.finestra,MGestors));
         JButton panelIncidencia = new JButton("Gestio de Professors");

@@ -1,15 +1,21 @@
 package Sprint5Java.views;
 
 import Sprint5Java.controllers.MainController;
+import Sprint5Java.models.Matricula;
 
 import javax.swing.*;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /**
  * Grup 2 Sprint 5 2020-2021 - Alberto Dos Santos
  * Classe PanelMatricula, Gestiona els panels del Crud
  */
 public class PanelMatricula {
-    MainController MGestors;
+    MainController MainController;
     Finestra finestra;
     JPanel panel;
 
@@ -17,62 +23,58 @@ public class PanelMatricula {
      * Constructor Per als Panels de Matricula
      *
      * @param finestra objecte Finestra
-     * @param MGestors objecte ModulsGestors per editar informacio
+     * @param MainController objecte MainController per accedir als controladors per editar informacio
      */
-//    public PanelMatricula(Finestra finestra, ModulsGestors MGestors) {
-//        this.finestra = finestra;
-//        this.MGestors = MGestors;
-//        this.menuMatricula();
-//    }
+    public PanelMatricula(Finestra finestra, MainController MainController) {
+        this.finestra = finestra;
+        this.MainController = MainController;
+        this.menuMatricula();
+    }
 
     /**
      * Panel menú per a les opcions del crud de Matricula
      */
-//    public void menuMatricula() {
-//        this.panel = new JPanel();
-//
-//        GridLayout distribucio = new GridLayout(5, 1, 2, 2);
-//        this.panel.setLayout(distribucio);
-//
-//        JLabel titol = new JLabel("matricules:");
-//
-//        JList<String> llistaMatricula = new JList<>(this.MGestors.GMatricula.llistarMatriculaAArray());
-//        llistaMatricula.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-//        JScrollPane scrollPane = new JScrollPane(llistaMatricula);
-//        llistaMatricula.setVisibleRowCount(2);
-//        llistaMatricula.setLayoutOrientation(JList.VERTICAL);
-//        PanelMatricula guardar = this;
+    public void menuMatricula() {
+        this.panel = new JPanel();
+
+        GridLayout distribucio = new GridLayout(5, 1, 2, 2);
+        this.panel.setLayout(distribucio);
+        JLabel titol = new JLabel("Matricules:");
+        JTable table = new JTable(this.MainController.CMatricula.getDataTable(), new String[]{"ID", "GRUP", "ALUMNE", "DATA MATRICULAT", "DATA DESMATRICULAT", "ESTAT"});
+
+        JScrollPane scrollPaneTable = new JScrollPane(table);
+        PanelMatricula guardar = this;
 //        llistaMatricula.addMouseListener(new MouseAdapter() {
 //
 //            @Override
 //            public void mouseClicked(MouseEvent e) {
 //                if (e.getClickCount() == 2) {
-//                    Matricula MatriculaAEditar = guardar.MGestors.GMatricula.getMatriculaByName((llistaMatricula.getSelectedValue()).substring(5));
+//                    Matricula MatriculaAEditar = guardar.MainController.CMatricula.getMatriculaByName((llistaMatricula.getSelectedValue()).substring(5));
 //                    guardar.afegirMatricula(MatriculaAEditar);
 //
 //                }
 //            }
 //        });
-//        JButton crear = new JButton("Crear Matricula");
+        JButton crear = new JButton("Crear Matricula");
 //        crear.addActionListener(e -> this.afegirMatricula(null));
-//
-//
-//        JButton importExport = new JButton("Importar/Exportar a CSV");
-//        PanelMatricula aquestPanel = this;
+
+
+        JButton importExport = new JButton("Importar/Exportar a CSV");
+        PanelMatricula aquestPanel = this;
 //        importExport.addActionListener(e -> {
-//            new PanelMenu(this.finestra, MGestors);
+//            new PanelMenu(this.finestra, MainController);
 //            this.importExportPopUp();
 //        });
-//        JButton exit = new JButton("Tornar al Menú");
-//        exit.addActionListener(e -> new PanelMenu(this.finestra, MGestors));
-//
-//        this.panel.add(titol);
-//        this.panel.add(scrollPane);
-//        this.panel.add(crear);
-//        this.panel.add(importExport);
-//        this.panel.add(exit);
-//        this.finestra.changePanel(this.panel);
-//    }
+        JButton exit = new JButton("Tornar al Menú");
+        exit.addActionListener(e -> new PanelMenu(this.finestra, MainController));
+
+        this.panel.add(titol);
+        this.panel.add(scrollPaneTable);
+        this.panel.add(crear);
+        this.panel.add(importExport);
+        this.panel.add(exit);
+        this.finestra.changePanel(this.panel);
+    }
 
     /**
      * Aquest mètode exporta les dades actuals a la carpeta Exports

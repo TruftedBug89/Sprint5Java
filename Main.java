@@ -23,9 +23,9 @@ public class Main {
      */
     public static void main(String[] args) {
         HashMap<String,String> loadedConfig = LoadConfig.loadConfig();
-        MainController MGestors = new MainController(loadedConfig);
+        MainController MainController = new MainController(loadedConfig);
         Finestra frame = new Finestra(ALTURA, AMPLADA, NOM_FINESTRA, loadedConfig);
-        PanelMenu menu = new PanelMenu(frame, MGestors);//la classe s'encarrega de posar el panel al frame
+        PanelMenu menu = new PanelMenu(frame, MainController);//la classe s'encarrega de posar el panel al frame
 
     }
 
