@@ -4,11 +4,10 @@ import Sprint5Java.controllers.MainController;
 import Sprint5Java.models.Matricula;
 
 import javax.swing.*;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.Date;
 
 /**
  * Grup 2 Sprint 5 2020-2021 - Alberto Dos Santos
@@ -22,7 +21,7 @@ public class PanelMatricula {
     /**
      * Constructor Per als Panels de Matricula
      *
-     * @param finestra objecte Finestra
+     * @param finestra       objecte Finestra
      * @param MainController objecte MainController per accedir als controladors per editar informacio
      */
     public PanelMatricula(Finestra finestra, MainController MainController) {
@@ -40,21 +39,29 @@ public class PanelMatricula {
         GridLayout distribucio = new GridLayout(5, 1, 2, 2);
         this.panel.setLayout(distribucio);
         JLabel titol = new JLabel("Matricules:");
-        JTable table = new JTable(this.MainController.CMatricula.getDataTable(), new String[]{"ID", "GRUP", "ALUMNE", "DATA MATRICULAT", "DATA DESMATRICULAT", "ESTAT"});
-
+        String[][] tableData = this.MainController.CMatricula.getDataTable();
+        JTable table = new JTable(tableData, new String[]{"ID", "GRUP", "ALUMNE", "DATA MATRICULAT", "DATA DESMATRICULAT", "ESTAT"} ){
+            public boolean editCellAt(int row, int column, java.util.EventObject e) {
+                return false;
+            }
+        };
+//        table.setRowSelectionAllowed(false);
         JScrollPane scrollPaneTable = new JScrollPane(table);
         PanelMatricula guardar = this;
-//        llistaMatricula.addMouseListener(new MouseAdapter() {
-//
-//            @Override
-//            public void mouseClicked(MouseEvent e) {
-//                if (e.getClickCount() == 2) {
-//                    Matricula MatriculaAEditar = guardar.MainController.CMatricula.getMatriculaByName((llistaMatricula.getSelectedValue()).substring(5));
+        table.addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+//                System.out.println(e.getClickCount());
+                if (e.getClickCount() == 2) {
+                    int id_edit = Integer.parseInt(tableData[table.getSelectedRow()][0]);
+                    guardar.afegirMatricula(new Matricula(Integer.parseInt(tableData[table.getSelectedRow()][0]),Integer.parseInt(tableData[table.getSelectedRow()][1]),Integer.parseInt(tableData[table.getSelectedRow()][2]),Date.valueOf(tableData[table.getSelectedRow()][3]),Date.valueOf(tableData[table.getSelectedRow()][4]), tableData[table.getSelectedRow()][5]));
+//                    Matricula MatriculaAEditar = guardar.MainController.CMatricula.getMatriculaByName((table.getrowllistaMatricula.getSelectedValue()).substring(5));
 //                    guardar.afegirMatricula(MatriculaAEditar);
-//
-//                }
-//            }
-//        });
+
+                }
+            }
+        });
         JButton crear = new JButton("Crear Matricula");
 //        crear.addActionListener(e -> this.afegirMatricula(null));
 
@@ -124,36 +131,36 @@ public class PanelMatricula {
      *                         eliminar Matricula, al acabar torna al menu d'empleat(aplicarPanel()), editar Matricula, al acabar torna al menu d'empleat(aplicarPanel())
      */
 
-//    public void afegirMatricula(Matricula MatriculaAEditar) {
-//        this.panel = new JPanel();
-//
-//        GridLayout distribucio = new GridLayout((MatriculaAEditar != null) ? 4 : 3, 2, 2, 2);
-//        this.panel.setLayout(distribucio);
-//        JLabel NomMatriculaTitol = new JLabel("Nom:");
-//        JTextField NomMatriculaInput = new JTextField();
-//        JLabel DescMatriculaTitol = new JLabel("Descripció:");
-//        JTextField DescMatriculaInput = new JTextField();
-//
-//        JButton crearMatricula = new JButton("Crear");
-//
-//
-//        JButton atras = new JButton("Tornar al gestor");
+    public void afegirMatricula(Matricula MatriculaAEditar) {
+        this.panel = new JPanel();
+
+        GridLayout distribucio = new GridLayout((MatriculaAEditar != null) ? 4 : 3, 2, 2, 2);
+        this.panel.setLayout(distribucio);
+        JLabel NomMatriculaTitol = new JLabel("Nom:");
+        JTextField NomMatriculaInput = new JTextField();
+        JLabel DescMatriculaTitol = new JLabel("Descripció:");
+        JTextField DescMatriculaInput = new JTextField();
+
+        JButton crearMatricula = new JButton("Crear");
+
+
+        JButton atras = new JButton("Tornar al gestor");
 //        atras.addActionListener(e -> {
 //            if (MatriculaAEditar != null) {
-//                this.MGestors.GMatricula.altaMatricula(MatriculaAEditar.getNom(), MatriculaAEditar.getDescripcio());
+//                this.MainController.CMatricula.altaMatricula(MatriculaAEditar.getNom(), MatriculaAEditar.getDescripcio());
 //                this.popUp("Cancelada la edició");
 //            }
 //            this.menuMatricula();
 //
 //        });
-//
-//
-//        this.panel.add(NomMatriculaTitol);
-//        this.panel.add(NomMatriculaInput);
-//        this.panel.add(DescMatriculaTitol);
-//        this.panel.add(DescMatriculaInput);
-//        this.panel.add(crearMatricula);
-//        this.panel.add(atras);
+
+
+        this.panel.add(NomMatriculaTitol);
+        this.panel.add(NomMatriculaInput);
+        this.panel.add(DescMatriculaTitol);
+        this.panel.add(DescMatriculaInput);
+        this.panel.add(crearMatricula);
+        this.panel.add(atras);
 //        if (MatriculaAEditar != null) {
 //            crearMatricula.setText("Guardar Canvis");
 //            crearMatricula.addActionListener(e -> {
@@ -161,12 +168,12 @@ public class PanelMatricula {
 //                    this.popUp("Error al crear la Matricula, emplena tots els camps.");
 //
 //                } else {
-//                    if (!this.MGestors.GMatricula.eliminarMatricula(MatriculaAEditar.getId())) {
+//                    if (!this.MainController.CMatricula.eliminarMatricula(MatriculaAEditar.getId())) {
 //                        this.menuMatricula();
 //                        this.popUp("Ha sorgit un error al editar la Matricula");
 //                        return;
 //                    }
-//                    if (this.MGestors.GMatricula.altaMatricula(NomMatriculaInput.getText(), DescMatriculaInput.getText())) {
+//                    if (this.MainController.CMatricula.altaMatricula(NomMatriculaInput.getText(), DescMatriculaInput.getText())) {
 //                        this.menuMatricula();
 //                        this.popUp("Matricula " + NomMatriculaInput.getText() + " editada " + "correctament.");
 //
@@ -182,7 +189,7 @@ public class PanelMatricula {
 //            this.panel.add(descartar);
 //            JButton eliminar = new JButton("Eliminar Matricula");
 //            eliminar.addActionListener(e -> {
-//                if (this.MGestors.GMatricula.eliminarMatricula(MatriculaAEditar.getId())) {
+//                if (this.MainController.CMatricula.eliminarMatricula(MatriculaAEditar.getId())) {
 //                    this.menuMatricula();
 //                    this.popUp("Matricula " + MatriculaAEditar.getNom() + " eliminada correctament.");
 //                } else {
@@ -197,7 +204,7 @@ public class PanelMatricula {
 //                    this.popUp("Error al crear la Matricula, emplena tots els camps.");
 //
 //                } else {
-//                    if (this.MGestors.GMatricula.altaMatricula(NomMatriculaInput.getText(), DescMatriculaInput.getText())) {
+//                    if (this.MainController.CMatricula.altaMatricula(NomMatriculaInput.getText(), DescMatriculaInput.getText())) {
 //                        this.menuMatricula();
 //                        this.popUp("Matricula " + NomMatriculaInput.getText() + " creada " + "correctament.");
 //
@@ -207,9 +214,9 @@ public class PanelMatricula {
 //                }
 //            });
 //        }
-//        this.finestra.changePanel(this.panel);
-//
-//    }
+        this.finestra.changePanel(this.panel);
+
+    }
 
     /**
      * Aquest mètode crea un popUp(finestra emergent) que no esta relacionada amb this.finestra i s'utilitza per el menu de exportar importar

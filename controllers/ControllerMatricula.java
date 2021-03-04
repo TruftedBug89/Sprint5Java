@@ -153,21 +153,22 @@ public class ControllerMatricula {
      * @param id id de la Matricula a eliminar
      * @return retorna true si s'ha eliminat i false si no
      */
-//    public boolean eliminarMatricula(Integer id) {
-//
-//        for (int i = 0; i < ArrayMatricules.size(); i++) {
-//            if (ArrayMatricules.get(i) != null) {
-//                if (ArrayMatricules.get(i).getId().equals(id)) {
-//                    Log.log("Matricula " + ArrayMatricules.get(i).getNom() + " eliminada correctament", "Eliminar Matricula");
-//                    this.ArrayMatricules.remove(i);
-//                    return true;
-//                }
-//            }
-//
-//        }
-//        Error.log("No s'ha trobat la ID de la Matricula a eliminar ", "eliminarMatricula");
-//        return false;
-//    }
+    public boolean eliminarMatricula(Integer id) {
+        try {
+            Statement sentencia = this.connexioBD.createStatement();
+            ResultSet resultado = sentencia.executeQuery("update "+DBTableName+" set estat = 'inactiu' where id = "+id);
+            while (resultado.next()) {
+                System.out.println(resultado.getRow());
+            }
+            return true;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            Log.log("Error al eliminar la matricula(eliminarmatricula)", "ControllerMatricula");
+            return false;
+        }
+
+    }
 
     /**
      * Aquest mètode retorna un array String[] amb tots els noms de totes les Matricules al array, incloent " Nom : " al principi de cada nom
