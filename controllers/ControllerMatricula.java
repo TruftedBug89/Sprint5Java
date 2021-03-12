@@ -91,10 +91,12 @@ public class ControllerMatricula {
     public boolean altaMatricula(Matricula matriculaAlta) {
         try {
             Statement sentencia = this.connexioBD.createStatement();
-            System.out.println("INSERT INTO matriculas (id_grup, id_alumne, data_matriculat," + ((matriculaAlta.getData_desmatriculat() != null) ? " data_desmatriculat," : "") + " estat) VALUES (" + matriculaAlta.getId_grup() + "," + matriculaAlta.getId_alumne() + "," + "DATE '"+matriculaAlta.getData_matriculat()+"'" + ((matriculaAlta.getData_desmatriculat() != null) ?  ",DATE '"+matriculaAlta.getData_desmatriculat()+"'" : "") + ",'" + matriculaAlta.getEstat()+"')");
+//            System.out.println("INSERT INTO matriculas (id_grup, id_alumne, data_matriculat," + ((matriculaAlta.getData_desmatriculat() != null) ? " data_desmatriculat," : "") + " estat) VALUES (" + matriculaAlta.getId_grup() + "," + matriculaAlta.getId_alumne() + "," + "DATE '" + matriculaAlta.getData_matriculat() + "'" + ((matriculaAlta.getData_desmatriculat() != null) ? ",DATE '" + matriculaAlta.getData_desmatriculat() + "'" : "") + ",'" + matriculaAlta.getEstat() + "')");
 
-            int resultat = sentencia.executeUpdate("INSERT INTO matriculas (id_grup, id_alumne, data_matriculat," + ((matriculaAlta.getData_desmatriculat() != null) ? " data_desmatriculat," : "") + " estat) VALUES (" + matriculaAlta.getId_grup() + "," + matriculaAlta.getId_alumne() + "," + "DATE '"+matriculaAlta.getData_matriculat()+"'" + ((matriculaAlta.getData_desmatriculat() != null) ?  ",DATE '"+matriculaAlta.getData_desmatriculat()+"'" : "") + ",'" + matriculaAlta.getEstat()+"')");
-
+            int resultat = sentencia.executeUpdate("INSERT INTO matriculas (id_grup, id_alumne, data_matriculat," + ((matriculaAlta.getData_desmatriculat() != null) ? " data_desmatriculat," : "") + " estat) VALUES (" + matriculaAlta.getId_grup() + "," + matriculaAlta.getId_alumne() + "," + "DATE '" + matriculaAlta.getData_matriculat() + "'" + ((matriculaAlta.getData_desmatriculat() != null) ? ",DATE '" + matriculaAlta.getData_desmatriculat() + "'" : "") + ",'" + matriculaAlta.getEstat() + "')");
+            if (resultat < 1) {
+                throw new SQLException("insert didnt affect any row, check(altaMatricula) in Controller Matricula");
+            }
 //            while (resultado.next()) {
 //                System.out.println(resultado.getRow());
 //            }
@@ -162,9 +164,6 @@ public class ControllerMatricula {
         try {
             Statement sentencia = this.connexioBD.createStatement();
             ResultSet resultado = sentencia.executeQuery("update " + DBTableName + " set estat = 'inactiu' where id = " + id);
-            while (resultado.next()) {
-                System.out.println(resultado.getRow());
-            }
             return true;
 
         } catch (SQLException e) {
@@ -211,6 +210,48 @@ public class ControllerMatricula {
             studentNameList.add("ERROR DB");
             return (String[]) studentNameList.toArray();
         }
+    }
+
+    public Matricula getMatriculaById(int id) {
+        try {
+            Statement sentencia = this.connexioBD.createStatement();
+            ResultSet resultado = sentencia.executeQuery("select * from " + DBTableName + " where id = " + id);
+            Matricula getFromDB = null;
+            while (resultado.next()) {
+//                System.out.println(resultado.getString("data_matriculat").split(" ")[0]);
+                getFromDB = new Matricula(
+                        Integer.parseInt(resultado.getString("id")),
+                        Integer.parseInt(resultado.getString("id_grup")),
+                        Integer.parseInt(resultado.getString("id_alumne")),
+
+                        Date.valueOf(resultado.getString("data_matriculat").split(" ")[0]),
+                        (resultado.getString("data_desmatriculat") == null) ? null : Date.valueOf(resultado.getString("data_desmatriculat").split(" ")[0]),
+                        resultado.getString("estat")
+                );
+                return getFromDB;
+
+            }
+            return getFromDB;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            Log.log("Error al buscar la matricula per ID (getMatriculaById)", "ControllerMatricula");
+            return null;
+        }
+    }
+
+    public boolean editMatricula(Integer id_matricula, Matricula matricula) {
+        try {
+            Statement sentencia = this.connexioBD.createStatement();
+            ResultSet resultado = sentencia.executeQuery("update " + DBTableName + " SET id_grup="+matricula.getId_grup()+", id_alumne="+matricula.getId_alumne()+", data_matriculat="+matricula.getData_matriculat()+", data_desmatriculat="+matricula.getData_desmatriculat()+",estat="+matricula.getEstat()+" WHERE id = "+id_matricula);
+            return true;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            Log.log("Error al eliminar la matricula(eliminarmatricula)", "ControllerMatricula");
+            return false;
+        }
+
     }
 
     /**
