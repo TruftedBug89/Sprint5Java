@@ -107,10 +107,10 @@ public class PanelMatricula {
 
         JButton importExport = new JButton("Importar/Exportar a CSV");
         PanelMatricula aquestPanel = this;
-//        importExport.addActionListener(e -> {
-//            new PanelMenu(this.finestra, MainController);
-//            this.importExportPopUp();
-//        });
+        importExport.addActionListener(e -> {
+            new PanelMenu(this.finestra, MainController);
+            this.importExportPopUp();
+        });
         JButton exit = new JButton("Tornar al Menú");
         exit.addActionListener(e -> new PanelMenu(this.finestra, MainController));
 
@@ -224,29 +224,29 @@ public class PanelMatricula {
     /**
      * Aquest mètode crea un popUp(finestra emergent) que no esta relacionada amb this.finestra i s'utilitza per el menu de exportar importar
      */
-//    private void importExportPopUp() {
-//        Finestra popUp = new Finestra(300, 450, "Informació", null);
-//        JPanel panelPopUp = new JPanel();
-//        panelPopUp.setLayout(new GridLayout(4, 1));
-//        JButton importar = new JButton("Importar CSV");
-//        importar.addActionListener(e -> {
+    private void importExportPopUp() {
+        Finestra popUp = new Finestra(300, 450, "Importar/Exportar");
+        JPanel panelPopUp = new JPanel();
+        panelPopUp.setLayout(new GridLayout(3, 1));
+        JButton importar = new JButton("Importar CSV");
+        importar.addActionListener(e -> {
 //            this.importData();
-//            popUp.dispose();
-//        });
-//        JButton exportar = new JButton("Exportar CSV");
-//        exportar.addActionListener(e -> {
+            popUp.dispose();
+        });
+        JButton exportar = new JButton("Exportar CSV");
+        exportar.addActionListener(e -> {
 //            this.exportData();
-//            popUp.dispose();
-//        });
-//        JButton continueButton = new JButton("Sortir");
-//        continueButton.addActionListener(e -> popUp.dispose());
-//        panelPopUp.add(importar);
-//        panelPopUp.add(exportar);
-//        panelPopUp.add(continueButton);
+            popUp.dispose();
+        });
+        JButton continueButton = new JButton("Sortir");
+        continueButton.addActionListener(e -> popUp.dispose());
+        panelPopUp.add(importar);
+        panelPopUp.add(exportar);
+        panelPopUp.add(continueButton);
 //        JLabel avis = new JLabel("Recorda que NO pots utilitzar accents, emojis o el caracter \"|\" ");
 //        panelPopUp.add(avis);
-//        popUp.changePanel(panelPopUp);
-//    }
+        popUp.changePanel(panelPopUp);
+    }
 
     /**
      * Aquest mètode crea un popUp(finestra emergent) que no esta relacionada amb this.finestra i sol utilitzar-se per mostrar informació

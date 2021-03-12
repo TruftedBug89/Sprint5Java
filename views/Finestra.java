@@ -27,6 +27,12 @@ public class Finestra extends JFrame {
         this.finestraName = (loadedConfig == null) ? nomFinestra : loadedConfig.get("window.name");
         this.configFrame();
     }
+    public Finestra(int altura, int amplada, String nomFinestra) {
+        this.finestraHeight = altura;
+        this.finestraWidth = amplada;
+        this.finestraName = nomFinestra;
+        this.configFrame();
+    }
 
     /**
      * Aquest mètode configura la finestra amb diferent parametres
