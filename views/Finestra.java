@@ -22,7 +22,6 @@ public class Finestra extends JFrame {
      * @param loadedConfig aquestes dades es sobreescriuen si hi hes el fitxer de configuracio ple
      */
     public Finestra(int altura, int amplada, String nomFinestra, HashMap<String,String> loadedConfig) {
-        System.out.println("finestra  req "+loadedConfig.get("db.password"));
         this.finestraHeight = (loadedConfig.get("window.size") == null) ? altura : Integer.parseInt(loadedConfig.get("window.size").split("x")[0]);
         this.finestraWidth = (loadedConfig.get("window.size") == null) ? amplada : Integer.parseInt(loadedConfig.get("window.size").split("x")[1]);
         this.finestraName = (loadedConfig == null) ? nomFinestra : loadedConfig.get("window.name");

@@ -1,5 +1,6 @@
 package Sprint5Java.models;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 /**
@@ -12,8 +13,8 @@ public class Matricula {
     private Integer id;
     private Integer id_grup;
     private Integer id_alumne;
-    private Date data_matriculat;
-    private Date data_desmatriculat;
+    private java.sql.Date data_matriculat;
+    private java.sql.Date data_desmatriculat;
     private String estat;
 
     /**
@@ -24,12 +25,12 @@ public class Matricula {
      * @param data_desmatriculat
      * @param estat
      */
-    public Matricula(Integer id, Integer id_grup, Integer id_alumne, Date data_matriculat, Date data_desmatriculat, String estat) {
+    public Matricula(Integer id, Integer id_grup, Integer id_alumne, java.sql.Date data_matriculat, java.sql.Date data_desmatriculat, String estat) {
         this.id = id;
         this.id_grup = id_grup;
         this.id_alumne = id_alumne;
         this.data_matriculat = data_matriculat;
-        this.data_desmatriculat = data_desmatriculat;
+        this.data_desmatriculat = (data_desmatriculat == null) ? null : data_desmatriculat;
         switch (estat) {
             case "actiu":
                 this.estat = "actiu";
@@ -41,9 +42,6 @@ public class Matricula {
                 this.estat = "";
                 break;
         }
-//        Log.log("Matricula Creada \"" + nom + "\" amb la ID: " + id, "CrearCategoria");
-
-
     }
 
     public Integer getId() {
@@ -70,7 +68,7 @@ public class Matricula {
         return data_matriculat;
     }
 
-    public void setData_matriculat(Date data_matriculat) {
+    public void setData_matriculat(java.sql.Date data_matriculat) {
         this.data_matriculat = data_matriculat;
     }
 
@@ -78,7 +76,7 @@ public class Matricula {
         return data_desmatriculat;
     }
 
-    public void setData_desmatriculat(Date data_desmatriculat) {
+    public void setData_desmatriculat(java.sql.Date data_desmatriculat) {
         this.data_desmatriculat = data_desmatriculat;
     }
 

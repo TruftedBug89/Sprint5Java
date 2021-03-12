@@ -8,6 +8,8 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 /**
  * Grup 2 Sprint 5 2020-2021 - Alberto Dos Santos
@@ -55,7 +57,14 @@ public class PanelMatricula {
 //                System.out.println(e.getClickCount());
                 if (e.getClickCount() == 2) {
                     int id_edit = Integer.parseInt(tableData[table.getSelectedRow()][0]);
-                    guardar.afegirMatricula(new Matricula(Integer.parseInt(tableData[table.getSelectedRow()][0]),Integer.parseInt(tableData[table.getSelectedRow()][1]),Integer.parseInt(tableData[table.getSelectedRow()][2]),Date.valueOf(tableData[table.getSelectedRow()][3]),Date.valueOf(tableData[table.getSelectedRow()][4]), tableData[table.getSelectedRow()][5]));
+                    guardar.afegirMatricula(new Matricula(
+                            Integer.parseInt(tableData[table.getSelectedRow()][0]),
+                            Integer.parseInt(tableData[table.getSelectedRow()][1]),
+                            Integer.parseInt(tableData[table.getSelectedRow()][2]),
+                            Date.valueOf(tableData[table.getSelectedRow()][3]),
+//                            Date.valueOf(tableData[table.getSelectedRow()][4]),
+                            null,
+                            tableData[table.getSelectedRow()][5]));
 //                    Matricula MatriculaAEditar = guardar.MainController.CMatricula.getMatriculaByName((table.getrowllistaMatricula.getSelectedValue()).substring(5));
 //                    guardar.afegirMatricula(MatriculaAEditar);
 
@@ -63,7 +72,7 @@ public class PanelMatricula {
             }
         });
         JButton crear = new JButton("Crear Matricula");
-//        crear.addActionListener(e -> this.afegirMatricula(null));
+        crear.addActionListener(e -> this.afegirMatricula(null));
 
 
         JButton importExport = new JButton("Importar/Exportar a CSV");
@@ -134,34 +143,40 @@ public class PanelMatricula {
     public void afegirMatricula(Matricula MatriculaAEditar) {
         this.panel = new JPanel();
 
-        GridLayout distribucio = new GridLayout((MatriculaAEditar != null) ? 4 : 3, 2, 2, 2);
+        GridLayout distribucio = new GridLayout((MatriculaAEditar != null) ? 4 : 5, 2, 2, 2);
         this.panel.setLayout(distribucio);
-        JLabel NomMatriculaTitol = new JLabel("Nom:");
-        JTextField NomMatriculaInput = new JTextField();
-        JLabel DescMatriculaTitol = new JLabel("Descripció:");
-        JTextField DescMatriculaInput = new JTextField();
-
+        JLabel GrupMatriculaTitol = new JLabel("Grup : ");
+        JComboBox GrupMatriculaInput = new JComboBox(this.MainController.CMatricula.getGroupNameList());
+        JLabel AlumneMatriculaTitol = new JLabel("Alumne : ");
+        JComboBox AlumneMatriculaInput = new JComboBox(this.MainController.CMatricula.getStudentNameList());
+        JLabel DataMMatriculaTitol = new JLabel("Data Matriculat : format(AAAA-MM-DD)");
+        JTextField DataMMatriculaInput = new JTextField();
+        JLabel DataDMatriculaTitol = new JLabel("Data Desmatriculat : format(AAAA-MM-DD)");
+        JTextField DataDMatriculaInput = new JTextField();
         JButton crearMatricula = new JButton("Crear");
 
 
         JButton atras = new JButton("Tornar al gestor");
-//        atras.addActionListener(e -> {
-//            if (MatriculaAEditar != null) {
+        atras.addActionListener(e -> {
+            if (MatriculaAEditar != null) {
 //                this.MainController.CMatricula.altaMatricula(MatriculaAEditar.getNom(), MatriculaAEditar.getDescripcio());
-//                this.popUp("Cancelada la edició");
-//            }
-//            this.menuMatricula();
-//
-//        });
+                this.popUp("Cancelada la edició");
+            }
+            this.menuMatricula();
 
+        });
 
-        this.panel.add(NomMatriculaTitol);
-        this.panel.add(NomMatriculaInput);
-        this.panel.add(DescMatriculaTitol);
-        this.panel.add(DescMatriculaInput);
+        this.panel.add(GrupMatriculaTitol);
+        this.panel.add(GrupMatriculaInput);
+        this.panel.add(AlumneMatriculaTitol);
+        this.panel.add(AlumneMatriculaInput);
+        this.panel.add(DataMMatriculaTitol);
+        this.panel.add(DataMMatriculaInput);
+        this.panel.add(DataDMatriculaTitol);
+        this.panel.add(DataDMatriculaInput);
         this.panel.add(crearMatricula);
         this.panel.add(atras);
-//        if (MatriculaAEditar != null) {
+        if (MatriculaAEditar != null) {
 //            crearMatricula.setText("Guardar Canvis");
 //            crearMatricula.addActionListener(e -> {
 //                if (NomMatriculaInput.getText().isBlank() || DescMatriculaInput.getText().isBlank()) {
@@ -186,6 +201,7 @@ public class PanelMatricula {
 //            DescMatriculaInput.setText(MatriculaAEditar.getDescripcio());
 //            JButton descartar = new JButton("Descartar Canvis");
 //            descartar.addActionListener(e -> this.menuMatricula());
+
 //            this.panel.add(descartar);
 //            JButton eliminar = new JButton("Eliminar Matricula");
 //            eliminar.addActionListener(e -> {
@@ -198,22 +214,31 @@ public class PanelMatricula {
 //                }
 //            });
 //            this.panel.add(eliminar);
-//        } else {
-//            crearMatricula.addActionListener(e -> {
-//                if (NomMatriculaInput.getText().isBlank() || DescMatriculaInput.getText().isBlank()) {
-//                    this.popUp("Error al crear la Matricula, emplena tots els camps.");
-//
-//                } else {
-//                    if (this.MainController.CMatricula.altaMatricula(NomMatriculaInput.getText(), DescMatriculaInput.getText())) {
-//                        this.menuMatricula();
-//                        this.popUp("Matricula " + NomMatriculaInput.getText() + " creada " + "correctament.");
-//
-//                    } else {
-//                        this.popUp("Error al crear la Matricula.\n(No es poden repetir noms de matricules)");
-//                    }
-//                }
-//            });
-//        }
+        } else {
+            crearMatricula.addActionListener(e -> {
+                if (GrupMatriculaInput.getSelectedItem().toString().isBlank() || AlumneMatriculaInput.getSelectedItem().toString().isBlank() || DataMMatriculaInput.getText().isBlank()) {
+                    this.popUp("Error al crear la Matricula, emplena tots els camps.(No cal la data de Desmatriculacio)");
+//                * @param id
+//                * @param id_grup
+//                * @param id_alumne
+//                * @param data_matriculat
+//                * @param data_desmatriculat
+//                * @param estat
+                } else {
+                    int id_grup = Integer.parseInt(GrupMatriculaInput.getSelectedItem().toString().split("ID:")[1].trim());
+                    int id_usuari = Integer.parseInt(AlumneMatriculaInput.getSelectedItem().toString().split("ID:")[1].trim());
+                    Date dataMatricula = Date.valueOf(DataMMatriculaInput.getText());
+                    Date dataDesMatricula = (DataDMatriculaInput.getText().isBlank()) ? null : Date.valueOf(DataDMatriculaInput.getText());
+                    if (this.MainController.CMatricula.altaMatricula(new Matricula(null,id_grup,id_usuari,dataMatricula,dataDesMatricula,"actiu"))) {
+                        this.menuMatricula();
+                        this.popUp("Matricula creada correctament.");
+
+                    } else {
+                        this.popUp("Error al crear la Matricula.");
+                    }
+                }
+            });
+        }
         this.finestra.changePanel(this.panel);
 
     }

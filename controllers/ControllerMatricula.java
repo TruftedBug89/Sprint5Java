@@ -5,6 +5,7 @@ import Sprint5Java.logManager.Log;
 import Sprint5Java.models.Matricula;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -13,7 +14,8 @@ import java.util.HashMap;
  */
 public class ControllerMatricula {
 
-//try {
+    private static final String DBTableName = "matriculas";
+    //try {
 //        this.connexioBD = DriverManager.getConnection("jdbc:mysql://localhost/" + dbParam.get("db.database"), dbParam.get("db.user"), dbParam.get("db.password"));
 //        Statement sentencia = this.connexioBD.createStatement();
 //        ResultSet resultado = sentencia.executeQuery("select * from matriculas;");
@@ -27,7 +29,6 @@ public class ControllerMatricula {
 //    }
     private Connection connexioBD;
     private int contadorMatricules = 0;
-    private static final String DBTableName = "matriculas";
 
     /**
      * Constructor que inicia l'array
@@ -36,7 +37,7 @@ public class ControllerMatricula {
         try {
             this.connexioBD = DriverManager.getConnection("jdbc:mysql://localhost/" + dbParam.get("db.database"), dbParam.get("db.user"), dbParam.get("db.password"));
             Statement sentencia = this.connexioBD.createStatement();
-            ResultSet resultado = sentencia.executeQuery("select * from "+DBTableName);
+            ResultSet resultado = sentencia.executeQuery("select * from " + DBTableName);
             while (resultado.next()) {
                 this.contadorMatricules++;
             }
@@ -90,12 +91,13 @@ public class ControllerMatricula {
     public boolean altaMatricula(Matricula matriculaAlta) {
         try {
             Statement sentencia = this.connexioBD.createStatement();
-            ResultSet resultado = sentencia.executeQuery("INSERT INTO matriculas (id_grup, id_alumne, data_matriculat, data_desmatriculat, estat) VALUES ("+matriculaAlta.getId_grup()+","+matriculaAlta.getId_alumne()+","+matriculaAlta.getData_matriculat()+","+matriculaAlta.getData_desmatriculat()+","+matriculaAlta.getEstat()+";");
-            System.out.println("INSERT INTO matriculas (id_grup, id_alumne, data_matriculat, data_desmatriculat, estat) VALUES ("+matriculaAlta.getId_grup()+","+matriculaAlta.getId_alumne()+","+matriculaAlta.getData_matriculat()+","+matriculaAlta.getData_desmatriculat()+","+matriculaAlta.getEstat()+";");
+            System.out.println("INSERT INTO matriculas (id_grup, id_alumne, data_matriculat," + ((matriculaAlta.getData_desmatriculat() != null) ? " data_desmatriculat," : "") + " estat) VALUES (" + matriculaAlta.getId_grup() + "," + matriculaAlta.getId_alumne() + "," + "DATE '"+matriculaAlta.getData_matriculat()+"'" + ((matriculaAlta.getData_desmatriculat() != null) ?  ",DATE '"+matriculaAlta.getData_desmatriculat()+"'" : "") + ",'" + matriculaAlta.getEstat()+"')");
 
-            while (resultado.next()) {
-                System.out.println(resultado.getRow());
-            }
+            int resultat = sentencia.executeUpdate("INSERT INTO matriculas (id_grup, id_alumne, data_matriculat," + ((matriculaAlta.getData_desmatriculat() != null) ? " data_desmatriculat," : "") + " estat) VALUES (" + matriculaAlta.getId_grup() + "," + matriculaAlta.getId_alumne() + "," + "DATE '"+matriculaAlta.getData_matriculat()+"'" + ((matriculaAlta.getData_desmatriculat() != null) ?  ",DATE '"+matriculaAlta.getData_desmatriculat()+"'" : "") + ",'" + matriculaAlta.getEstat()+"')");
+
+//            while (resultado.next()) {
+//                System.out.println(resultado.getRow());
+//            }
             this.contadorMatricules++;
             return true;
 
@@ -123,17 +125,19 @@ public class ControllerMatricula {
 //        }
 
     }
-    public String[][] getDataTable(){
+
+    public String[][] getDataTable() {
         int numberOfFields = 6;
         String[][] tableData = new String[this.contadorMatricules][numberOfFields];
         try {
             Statement sentencia = this.connexioBD.createStatement();
-            ResultSet resultado = sentencia.executeQuery("select * from "+DBTableName);
+            ResultSet resultado = sentencia.executeQuery("select matriculas.id, grupo_clases.nom, concat(usuarios.nom,' ',usuarios.cognom), matriculas.data_matriculat, matriculas.data_desmatriculat, matriculas.estat from matriculas, usuarios, grupo_clases, alumnos where matriculas.id_alumne = alumnos.id and alumnos.id = usuarios.id and matriculas.id_grup = grupo_clases.id and matriculas.estat = 'actiu'");
+
             int tableCounter = 0;
             while (resultado.next()) {
 
                 for (int i = 0; i < numberOfFields; i++) {
-                    tableData[tableCounter][i] = resultado.getString(i+1);//+1 perque el getString(int) comença desde 1 i no desde 0
+                    tableData[tableCounter][i] = resultado.getString(i + 1);//+1 perque el getString(int) comença desde 1 i no desde 0
                 }
                 tableCounter++;
             }
@@ -147,6 +151,7 @@ public class ControllerMatricula {
         }
 
     }
+
     /**
      * Aquest mètode elimina una Matricula basant-se de la ID que té
      *
@@ -156,7 +161,7 @@ public class ControllerMatricula {
     public boolean eliminarMatricula(Integer id) {
         try {
             Statement sentencia = this.connexioBD.createStatement();
-            ResultSet resultado = sentencia.executeQuery("update "+DBTableName+" set estat = 'inactiu' where id = "+id);
+            ResultSet resultado = sentencia.executeQuery("update " + DBTableName + " set estat = 'inactiu' where id = " + id);
             while (resultado.next()) {
                 System.out.println(resultado.getRow());
             }
@@ -168,6 +173,44 @@ public class ControllerMatricula {
             return false;
         }
 
+    }
+
+    public String[] getGroupNameList() {
+        ArrayList<String> groupNameList = new ArrayList<String>();
+        try {
+            Statement sentencia = this.connexioBD.createStatement();
+            ResultSet resultado = sentencia.executeQuery("select * from grupo_clases");
+            int tableCounter = 0;
+            while (resultado.next()) {
+                groupNameList.add(resultado.getString("nom") + " ID: " + resultado.getString("id"));
+            }
+            return groupNameList.toArray(new String[0]);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            Log.log("Error al crear el llistat amb els noms de grup (getGroupNameList)", "ControllerMatricula");
+            groupNameList.add("ERROR DB");
+            return (String[]) groupNameList.toArray();
+        }
+    }
+
+    public String[] getStudentNameList() {
+        ArrayList<String> studentNameList = new ArrayList<>();
+        try {
+            Statement sentencia = this.connexioBD.createStatement();
+            ResultSet resultado = sentencia.executeQuery("select * from usuarios where tipus = 'Alumne'");
+            int tableCounter = 0;
+            while (resultado.next()) {
+                studentNameList.add(resultado.getString("nom") + " " + resultado.getString("cognom") + " ID: " + resultado.getString("id"));
+            }
+            return studentNameList.toArray(new String[0]);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            Log.log("Error al crear el llistat amb els noms dels alumnes (getStudentNameList)", "ControllerMatricula");
+            studentNameList.add("ERROR DB");
+            return (String[]) studentNameList.toArray();
+        }
     }
 
     /**
