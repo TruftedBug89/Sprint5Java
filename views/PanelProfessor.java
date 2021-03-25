@@ -1,13 +1,10 @@
 package Sprint5Java.views;
 
 import Sprint5Java.controllers.MainController;
-import Sprint5Java.models.Matricula;
+import Sprint5Java.models.Professor;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.sql.*;
 
 public class PanelProfessor {
     MainController mainController;
@@ -63,6 +60,7 @@ public class PanelProfessor {
         this.panel.add(codi);
         this.panel.add(textCodi);
         this.panel.add(crear);
+        tornar.addActionListener(e -> this.mainController.CProfessor.altaProfessor(new Professor(textNom.getText(), textDni.getText(), codi.getText())));
         this.panel.add(tornar);
         tornar.addActionListener(e -> crearPanell());
         this.finestra.changePanel(this.panel);
