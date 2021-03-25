@@ -68,11 +68,18 @@ public class PanelProfessor {
 
     public void llistarProfessor(){
         this.panel = new JPanel();
-        GridLayout distribucio = new GridLayout(2, 1, 2, 2);
+        GridLayout distribucio = new GridLayout(3, 1, 2, 2);
         this.panel.setLayout(distribucio);
         JLabel llistat = new JLabel("Llistat de professors");
-        JTable table = new JTable();
+        String[][] tableData = this.mainController.CProfessor.dadesProfessor();
+        JTable table = new JTable(tableData, new String[]{"Nom", "DNI", "Codi"});
+        JButton tornar = new JButton("Tornar");
         this.panel.add(llistat);
+
+        JScrollPane scrollPaneTable = new JScrollPane(table);
+        this.panel.add(scrollPaneTable);
+        this.panel.add(tornar);
+        tornar.addActionListener(e -> crearPanell());
         this.finestra.changePanel(panel);
     }
 

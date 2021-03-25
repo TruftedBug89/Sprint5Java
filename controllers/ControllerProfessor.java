@@ -56,4 +56,26 @@ public class ControllerProfessor {
             return false;
         }
     }
+
+    public String[][] dadesProfessor() {
+        int numberOfFields = 3;
+        String[][] tableData = new String[this.contadorProfessors][numberOfFields];
+        try {
+            Statement sentencia = this.connexioBD.createStatement();
+            ResultSet resultado = sentencia.executeQuery("select usuarios.nom, usuarios.dni, profesors.codi_professor " +
+                    "from usuarios, profesors where usuarios.id = profesors.id_usuari AND usuarios.id_roles = 5");
+
+            int tableCounter = 0;
+            while (resultado.next()) {
+                for (int i = 0; i < numberOfFields; i++) {
+                    tableData[tableCounter][i] = resultado.getString(i + 1);//+1 perque el getString(int) comença desde 1 i no desde 0
+                }
+                tableCounter++;
+            }
+            return tableData;
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+            return tableData;
+        }
+    }
 }
