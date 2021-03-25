@@ -1,6 +1,9 @@
 package Sprint5Java.views;
 
 import Sprint5Java.controllers.MainController;
+import Sprint5Java.files.ManagerCSV;
+import Sprint5Java.logManager.Error;
+import Sprint5Java.logManager.Log;
 import Sprint5Java.models.Matricula;
 
 import javax.swing.*;
@@ -8,6 +11,8 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Grup 2 Sprint 5 2020-2021 - Alberto Dos Santos
@@ -33,33 +38,41 @@ public class PanelMatricula {
 
     /**
      * Aquest mètode exporta les dades actuals a la carpeta Exports
+     *
+     * @return
      */
-//    private void exportData() {
-//        ArrayList<String[]> export = new ArrayList<>();
-//
-//        String[] columnes = {"ID", "NOM", "DESCRIPCIO"};
-//        export.add(columnes);
-//        for (Matricula cat : this.MGestors.GMatricula.getArray()) {
-//            String[] i = {String.valueOf(cat.getId()), cat.getNom().replace(",","|"), cat.getDescripcio().replace(",","|")};
-//            export.add(i);
-//        }
-//        if (ManagerCSV.export(export, "Matricula")) {
-//            this.popUp("S'ha exportat Correctament");
-//            Log.log("S'han exportat les matricules correctament", "exportMatricula");
-//        } else {
-//            this.popUp("Error al exportar, array buit");
-//            Error.log("Error al exportar matricules, array buit", "exportarMatricula");
-//        }
-//
-//
-//    }
+    private boolean exportData() {
+        String[][] getDB = this.MainController.CMatricula.getDataTable();
+        if (getDB[0][0] == "ERROR DB") {
+            this.popUp("Error al exportar,possiblement array buit");
+            Error.log("Error al exportar matricules,possiblement array buit", "exportarMatricula");
+            return false;
+        }
+        ArrayList<String[]> export = new ArrayList<>();
+        String[] columnes = {"ID", "ID GRUP", "ID ALUMNE", "DATA MATRICULAT", "DATA DESMATRICULAT", "ESTAT"};
+        export.add(columnes);
+        Collections.addAll(export, getDB);
+        if (ManagerCSV.export(export, "Matricula")) {
+            this.popUp("S'ha exportat Correctament");
+            Log.log("S'han exportat les matricules correctament", "exportMatricula");
+            return true;
+        } else {
+            this.popUp("Error al exportar,possiblement array buit");
+            Error.log("Error al exportar matricules, array buit", "exportarMatricula");
+            return false;
+        }
+
+    }
 
     /**
      * Aquest mètode importa les dades d'un arxiu a l'aplicacio.
+     * @return
      */
-//    private void importData() {
+//    private boolean importData() {
+//        String[][] getDB = this.MainController.CMatricula.getDataTable();
+//
 //        ArrayList<String> dadesImportades = ManagerCSV.importCSV();
-//        if (dadesImportades == null) return;
+//        if ( getDB[0][0] == "ERROR DB") return false;
 //        dadesImportades.remove(0);//El·liminem la capçalera
 //        int matriculesImportades = 0;
 //        for (String dada : dadesImportades) {
@@ -70,6 +83,7 @@ public class PanelMatricula {
 //        }
 //        this.popUp("Importades " + matriculesImportades + " matricules.");
 //        Log.log("Importades " + matriculesImportades + " matricules.", "importMatricula");
+//        return false;
 //    }
 
     /**
@@ -106,7 +120,7 @@ public class PanelMatricula {
 
 
         JButton importExport = new JButton("Importar/Exportar a CSV");
-        PanelMatricula aquestPanel = this;
+//        PanelMatricula aquestPanel = this;
         importExport.addActionListener(e -> {
             new PanelMenu(this.finestra, MainController);
             this.importExportPopUp();
@@ -182,22 +196,22 @@ public class PanelMatricula {
                         this.popUp("Error al editar la Matricula.");
                     }
                 }
-//                if (!this.MainController.CMatricula.eliminarMatricula(MatriculaAEditar.getId())) {
-//                    this.menuMatricula();
-//                    this.popUp("Ha sorgit un error al editar la Matricula");
-//                    return;
-//                }
-//                if (this.MainController.CMatricula.altaMatricula(NomMatriculaInput.getText(), DescMatriculaInput.getText())) {
-//                    this.menuMatricula();
-//                    this.popUp("Matricula " + NomMatriculaInput.getText() + " editada " + "correctament.");
-//
-//                } else {
-//                    this.popUp("Error al crear la Matricula.\n(No es poden repetir noms de matricules)");
-//                }
-//            }
             });
-//            GrupMatriculaInput.setSelectedItem();
-//            AlumneMatriculaInput.setSelectedItem();
+
+            ComboBoxModel modelGrup = GrupMatriculaInput.getModel();
+            for (int i = 0; i < modelGrup.getSize(); i++) {
+                if (modelGrup.getElementAt(i).toString().contains("ID: " + MatriculaAEditar.getId_grup())) {
+                    GrupMatriculaInput.setSelectedIndex(i);
+                    break;
+                }
+            }
+            ComboBoxModel modelAlumne = AlumneMatriculaInput.getModel();
+            for (int i = 0; i < modelAlumne.getSize(); i++) {
+                if (modelAlumne.getElementAt(i).toString().contains("ID: " + MatriculaAEditar.getId_alumne())) {
+                    AlumneMatriculaInput.setSelectedIndex(i);
+                    break;
+                }
+            }
             DataMMatriculaInput.setText(String.valueOf(MatriculaAEditar.getData_matriculat()));
             DataDMatriculaInput.setText(String.valueOf(MatriculaAEditar.getData_matriculat()));
 
@@ -235,7 +249,7 @@ public class PanelMatricula {
         });
         JButton exportar = new JButton("Exportar CSV");
         exportar.addActionListener(e -> {
-//            this.exportData();
+            this.exportData();
             popUp.dispose();
         });
         JButton continueButton = new JButton("Sortir");
