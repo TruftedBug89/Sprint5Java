@@ -35,15 +35,15 @@ public class PanelMenu extends JPanel {
         panelCategoria.addActionListener(e -> new PanelMatricula(this.finestra, MainController));
         JButton panelEmpresa = new JButton("Gestio d'Alumnes");
 //        panelEmpresa.addActionListener(e -> new PanelEmpresa(this.finestra,MGestors));
-        JButton panelIncidencia = new JButton("Gestio de Professors");
-//        panelIncidencia.addActionListener(e -> new PanelIncidencia(this.finestra,MGestors));
+        JButton panelProfessor = new JButton("Gestio de Professors");
+        panelProfessor.addActionListener(e -> new PanelProfessor(this.finestra,MainController));
         JButton panelInstitut = new JButton("Gestió de Grups");
 //        panelInstitut.addActionListener(e -> new PanelInstitut(this.finestra,MGestors));
         JButton exit = new JButton("Sortir");
         exit.addActionListener(e -> this.finestra.dispose());
         this.add(panelCategoria);
         this.add(panelEmpresa);
-        this.add(panelIncidencia);
+        this.add(panelProfessor);
         this.add(panelInstitut);
         this.add(exit);
         this.finestra.changePanel(this);
