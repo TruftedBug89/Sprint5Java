@@ -10,7 +10,6 @@ public class ControllerProfessor {
     private Connection connexioBD;
     private int contadorProfessors = 0;
     public ControllerProfessor(HashMap<String, String> confLoadedDB) {
-        System.out.println("Prova");
         try {
             this.connexioBD = DriverManager.getConnection("jdbc:mysql://localhost:3306/" + confLoadedDB.get("db.database"), confLoadedDB.get("db.user"), confLoadedDB.get("db.password"));
             Statement sentencia = this.connexioBD.createStatement();

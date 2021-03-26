@@ -197,7 +197,7 @@ public class ControllerMatricula {
         ArrayList<String> studentNameList = new ArrayList<>();
         try {
             Statement sentencia = this.connexioBD.createStatement();
-            ResultSet resultado = sentencia.executeQuery("select * from usuarios where tipus = 'Alumne'");
+            ResultSet resultado = sentencia.executeQuery("select * from usuarios where id_roles = 4");
             int tableCounter = 0;
             while (resultado.next()) {
                 studentNameList.add(resultado.getString("nom") + " " + resultado.getString("cognom") + " ID: " + resultado.getString("id"));
