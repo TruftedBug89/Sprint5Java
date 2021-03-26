@@ -58,11 +58,11 @@ public class ControllerProfessor {
     }
 
     public String[][] dadesProfessor() {
-        int numberOfFields = 3;
+        int numberOfFields = 4;
         String[][] tableData = new String[this.contadorProfessors][numberOfFields];
         try {
             Statement sentencia = this.connexioBD.createStatement();
-            ResultSet resultado = sentencia.executeQuery("select usuarios.nom, usuarios.dni, profesors.codi_professor " +
+            ResultSet resultado = sentencia.executeQuery("select usuarios.id,usuarios.nom, usuarios.dni, profesors.codi_professor " +
                     "from usuarios, profesors where usuarios.id = profesors.id_usuari AND usuarios.id_roles = 5");
 
             int tableCounter = 0;
@@ -77,5 +77,25 @@ public class ControllerProfessor {
             throwables.printStackTrace();
             return tableData;
         }
+    }
+
+    public void modificarProfessor(Integer id, String nom, String dni, String codi){
+        try {
+            String[] profe = {nom,dni,codi};
+            Statement sentencia = this.connexioBD.createStatement();
+            PreparedStatement stmt;
+            stmt = this.connexioBD.prepareStatement("UPDATE usuarios SET nom=? WHERE id=?");
+            for (Integer i = 1; i < 4; i++){
+                stmt.setString(i,nom);
+
+
+            }
+            stmt.setString(4,Integer.toString(id));
+            stmt.executeUpdate();
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+
+
     }
 }
