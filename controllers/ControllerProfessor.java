@@ -80,21 +80,36 @@ public class ControllerProfessor {
 
     public void modificarProfessor(Integer id, String nom, String dni, String codi){
         try {
-            String[] profe = {nom,dni,codi};
+            String[] profe = {nom,dni};
             Statement sentencia = this.connexioBD.createStatement();
             PreparedStatement stmt;
-            stmt = this.connexioBD.prepareStatement("UPDATE usuarios SET nom=? WHERE id=?");
-            for (Integer i = 1; i < 4; i++){
-                stmt.setString(i,nom);
-
-
+            stmt = this.connexioBD.prepareStatement("UPDATE usuarios SET nom=?, dni=? WHERE id=?");
+            for (Integer i = 0; i < profe.length; i++){
+                stmt.setString(i+1,profe[i]);
             }
-            stmt.setString(4,Integer.toString(id));
+            stmt.setString(3,Integer.toString(id));
             stmt.executeUpdate();
         }catch (SQLException e){
             e.printStackTrace();
         }
 
 
+    }
+
+    public void eliminarProfessor(Integer id) {
+        try{
+            Statement sentencia = this.connexioBD.createStatement();
+            String sqlProfe = "DELETE FROM profesors where id_usuari = "+id;
+            int resul = sentencia.executeUpdate(sqlProfe);
+            String sql = "DELETE FROM usuarios where id = "+id;
+            int resultat = sentencia.executeUpdate(sql);
+            if (resultat <1){
+                System.out.println("No s'ha eliminat");
+            }
+
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
     }
 }

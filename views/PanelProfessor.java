@@ -35,6 +35,7 @@ public class PanelProfessor {
         this.panel.add(modificar);
         modificar.addActionListener(e -> editarProfessor());
         this.panel.add(eliminar);
+        eliminar.addActionListener(e -> eliminarProfessor());
         this.panel.add(exportar);
         this.panel.add(importar);
         this.panel.add(sortir);
@@ -120,7 +121,32 @@ public class PanelProfessor {
 
     public void eliminarProfessor(){
         this.panel = new JPanel();
-        this.finestra.changePanel(panel);
+        GridLayout distribucio = new GridLayout(4, 1, 2, 2);
+        this.panel.setLayout(distribucio);
+        JLabel llistat = new JLabel("Llistat de professors");
+        String[][] tableData = this.mainController.CProfessor.dadesProfessor();
+        JTable table = new JTable(tableData, new String[]{"ID","Nom", "DNI", "Codi"});
+        JButton tornar = new JButton("Tornar");
+        JButton eliminar = new JButton("Eliminar");
+        this.panel.add(llistat);
+        JScrollPane scrollPaneTable = new JScrollPane(table);
+        this.panel.add(scrollPaneTable);
+        this.panel.add(eliminar);
+        eliminar.addActionListener(e-> {
+            if (table.getRowCount() > 0){
+                for(Integer i = 0;i<tableData.length;i++) {
+                    Integer id = Integer.parseInt((String) table.getValueAt(i, 0));
+                    this.mainController.CProfessor.eliminarProfessor(id);
+                    finestra.changePanel(this.panel);
+                }
+            } else {
+                //this.LOGGER.warning("No s'ha pogut modificar l'alumne, cap registre seleccionat.");
+                //finestra.popup("Cap registre seleccionat actualment");
+            }
+        });
+        this.panel.add(tornar);
+        tornar.addActionListener(e -> crearPanell());
+        this.finestra.changePanel(this.panel);
     }
 
 }
