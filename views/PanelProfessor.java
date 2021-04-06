@@ -1,19 +1,26 @@
 package Sprint5Java.views;
 
 import Sprint5Java.controllers.MainController;
+import Sprint5Java.files.ManagerCSV;
+import Sprint5Java.logManager.Error;
+import Sprint5Java.logManager.Log;
 import Sprint5Java.models.Professor;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class PanelProfessor {
     MainController mainController;
     Finestra finestra;
     JPanel panel;
+    ManagerCSV csv;
 
     public PanelProfessor(Finestra finestra, MainController mainController){
         this.finestra = finestra;
         this.mainController = mainController;
+        this.csv = new ManagerCSV();
         this.crearPanell();
     }
 
@@ -37,6 +44,7 @@ public class PanelProfessor {
         this.panel.add(eliminar);
         eliminar.addActionListener(e -> eliminarProfessor());
         this.panel.add(exportar);
+        exportar.addActionListener(e -> this.exportData());
         this.panel.add(importar);
         this.panel.add(sortir);
         sortir.addActionListener(e -> new PanelMenu(this.finestra, this.mainController));
@@ -147,6 +155,26 @@ public class PanelProfessor {
         this.panel.add(tornar);
         tornar.addActionListener(e -> crearPanell());
         this.finestra.changePanel(this.panel);
+    }
+
+    private boolean exportData() {
+        String[][] getDB = this.mainController.CProfessor.dadesProfessor();
+        if (getDB[0][0] == "ERROR DB") {
+            Error.log("Error al exportar matricules,possiblement array buit", "exportarProfessor");
+            return false;
+        }
+        ArrayList<String[]> export = new ArrayList<>();
+        String[] columnes = {"ID", "NOM", "DNI", "CODI"};
+        export.add(columnes);
+        Collections.addAll(export, getDB);
+        if (ManagerCSV.export(export, "Professor")) {
+            Log.log("S'han exportat les professors correctament", "exportProfessor");
+            return true;
+        } else {
+            Error.log("Error al exportar professors, array buit", "exportarProfessor");
+            return false;
+        }
+
     }
 
 }

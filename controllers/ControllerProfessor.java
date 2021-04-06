@@ -13,7 +13,7 @@ public class ControllerProfessor {
         try {
             this.connexioBD = DriverManager.getConnection("jdbc:mysql://localhost:3306/" + confLoadedDB.get("db.database"), confLoadedDB.get("db.user"), confLoadedDB.get("db.password"));
             Statement sentencia = this.connexioBD.createStatement();
-            ResultSet resultado = sentencia.executeQuery("select * from profesors, usuarios where usuarios.id = profesors.id_usuari");
+            ResultSet resultado = sentencia.executeQuery("select * from profesors, usuarios where usuarios.id = profesors.id_usuari and usuarios.estat = 'actiu'");
             while (resultado.next()) {
                 this.contadorProfessors++;
             }
@@ -99,9 +99,10 @@ public class ControllerProfessor {
     public void eliminarProfessor(Integer id) {
         try{
             Statement sentencia = this.connexioBD.createStatement();
-            String sqlProfe = "DELETE FROM profesors where id_usuari = "+id;
-            int resul = sentencia.executeUpdate(sqlProfe);
-            String sql = "DELETE FROM usuarios where id = "+id;
+            /*String sqlProfe = "DELETE FROM profesors where id_usuari = "+id;
+            int resul = sentencia.executeUpdate(sqlProfe);*/
+            String sql = "UPDATE usuarios set estat='inactiu' where id = "+id;
+            System.out.println("La id "+id);
             int resultat = sentencia.executeUpdate(sql);
             if (resultat <1){
                 System.out.println("No s'ha eliminat");
@@ -111,5 +112,28 @@ public class ControllerProfessor {
         catch (SQLException e){
             e.printStackTrace();
         }
+    }
+
+    public String[] exportProfessor(){
+        String[] export;
+        try {
+            int numberOfFields = 4;
+            Statement sentencia = this.connexioBD.createStatement();
+            ResultSet resultado = sentencia.executeQuery("select usuarios.id,usuarios.nom, usuarios.dni, profesors.codi_professor " +
+                    "from usuarios, profesors where usuarios.id = profesors.id_usuari AND usuarios.id_roles = 5");
+
+            export = new String[this.contadorProfessors];
+            while (resultado.next()) {
+                for (int i = 0; i < numberOfFields; i++) {
+                    export[i] = resultado.getString(i + 1);//+1 perque el getString(int) comença desde 1 i no desde 0
+                }
+            }
+            return export;
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+            export = new String[1];
+            return export;
+        }
+
     }
 }
