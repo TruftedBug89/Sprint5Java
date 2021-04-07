@@ -26,14 +26,13 @@ public class PanelProfessor {
 
     public void crearPanell(){
         this.panel = new JPanel();
-        GridLayout distribucio = new GridLayout(7, 1, 2, 2);
+        GridLayout distribucio = new GridLayout(6, 1, 2, 2);
         this.panel.setLayout(distribucio);
         JButton crear = new JButton("Crear Professors");
         JButton llistar = new JButton("Llistar Professors");
         JButton modificar = new JButton("Modificar Professors");
         JButton eliminar = new JButton("Eliminar Professors");
-        JButton exportar = new JButton("Exportar Professors");
-        JButton importar = new JButton("Importar Professors");
+        JButton exportar = new JButton("Exportar/Importar Professors");
         JButton sortir = new JButton("Sortir");
         this.panel.add(crear);
         crear.addActionListener(e -> crearProfessor());
@@ -44,8 +43,7 @@ public class PanelProfessor {
         this.panel.add(eliminar);
         eliminar.addActionListener(e -> eliminarProfessor());
         this.panel.add(exportar);
-        exportar.addActionListener(e -> this.exportData());
-        this.panel.add(importar);
+        exportar.addActionListener(e -> this.importExportPopUp());
         this.panel.add(sortir);
         sortir.addActionListener(e -> new PanelMenu(this.finestra, this.mainController));
         this.finestra.changePanel(this.panel);
@@ -141,15 +139,11 @@ public class PanelProfessor {
         this.panel.add(scrollPaneTable);
         this.panel.add(eliminar);
         eliminar.addActionListener(e-> {
-            if (table.getRowCount() > 0){
-                for(Integer i = 0;i<tableData.length;i++) {
-                    Integer id = Integer.parseInt((String) table.getValueAt(i, 0));
-                    this.mainController.CProfessor.eliminarProfessor(id);
-                    finestra.changePanel(this.panel);
-                }
-            } else {
-                //this.LOGGER.warning("No s'ha pogut modificar l'alumne, cap registre seleccionat.");
-                //finestra.popup("Cap registre seleccionat actualment");
+            if (table.getRowCount() > 0 && !table.getSelectionModel().isSelectionEmpty()){
+                Integer idAlumne = Integer.parseInt((String) table.getValueAt(table.getSelectedRow(),0));
+                this.mainController.CProfessor.eliminarProfessor(idAlumne);
+               // finestra.changePanel(1,4);
+                //finestra.popup("Usuari eliminat correctament");
             }
         });
         this.panel.add(tornar);
@@ -175,6 +169,30 @@ public class PanelProfessor {
             return false;
         }
 
+    }
+
+    private void importExportPopUp() {
+        Finestra popUp = new Finestra(300, 450, "Importar/Exportar");
+        JPanel panelPopUp = new JPanel();
+        panelPopUp.setLayout(new GridLayout(3, 1));
+        JButton importar = new JButton("Importar CSV");
+        importar.addActionListener(e -> {
+//            this.importData();
+            popUp.dispose();
+        });
+        JButton exportar = new JButton("Exportar CSV");
+        exportar.addActionListener(e -> {
+            this.exportData();
+            popUp.dispose();
+        });
+        JButton continueButton = new JButton("Sortir");
+        continueButton.addActionListener(e -> popUp.dispose());
+        panelPopUp.add(importar);
+        panelPopUp.add(exportar);
+        panelPopUp.add(continueButton);
+//        JLabel avis = new JLabel("Recorda que NO pots utilitzar accents, emojis o el caracter \"|\" ");
+//        panelPopUp.add(avis);
+        popUp.changePanel(panelPopUp);
     }
 
 }

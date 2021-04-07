@@ -62,7 +62,7 @@ public class ControllerProfessor {
         try {
             Statement sentencia = this.connexioBD.createStatement();
             ResultSet resultado = sentencia.executeQuery("select usuarios.id,usuarios.nom, usuarios.dni, profesors.codi_professor " +
-                    "from usuarios, profesors where usuarios.id = profesors.id_usuari AND usuarios.id_roles = 5");
+                    "from usuarios, profesors where usuarios.id = profesors.id_usuari AND usuarios.id_roles = 5 AND usuarios.estat = 'actiu'");
 
             int tableCounter = 0;
             while (resultado.next()) {
@@ -107,7 +107,9 @@ public class ControllerProfessor {
             if (resultat <1){
                 System.out.println("No s'ha eliminat");
             }
-
+            else {
+                System.out.println("S'ha eliminat");
+            }
         }
         catch (SQLException e){
             e.printStackTrace();
