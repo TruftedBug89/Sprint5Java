@@ -24,6 +24,8 @@ public class PanelAlumne {
         this.crearPanell();
     }
 
+
+    /*Aquí es crea la primera interfície al fer click sobre "Gestió d'Alumne"*/
     public void crearPanell(){
         this.panel = new JPanel();
         GridLayout distribucio = new GridLayout(6, 1, 2, 2);
@@ -31,7 +33,7 @@ public class PanelAlumne {
         JButton crear = new JButton("Crear Alumnes");
         JButton llistar = new JButton("Llistar Alumnes");
         JButton modificar = new JButton("Modificar Alumnes");
-        JButton eliminar = new JButton("Eliminar Alumnes");
+        //JButton eliminar = new JButton("Eliminar Alumnes");
         JButton sortir = new JButton("Sortir");
         this.panel.add(crear);
         crear.addActionListener(e -> crearAlumne());
@@ -39,8 +41,6 @@ public class PanelAlumne {
         llistar.addActionListener(e -> llistarAlumne());
         this.panel.add(modificar);
         modificar.addActionListener(e -> editarAlumne());
-        this.panel.add(eliminar);
-        eliminar.addActionListener(e -> eliminarAlumne());
         this.panel.add(sortir);
         sortir.addActionListener(e -> new PanelMenu(this.finestra, this.mainController));
         this.finestra.changePanel(this.panel);
@@ -122,31 +122,6 @@ public class PanelAlumne {
         this.finestra.changePanel(this.panel);
     }
 
-    public void eliminarAlumne(){
-        this.panel = new JPanel();
-        GridLayout distribucio = new GridLayout(4, 1, 2, 2);
-        this.panel.setLayout(distribucio);
-        JLabel llistat = new JLabel("Llistat d'alumnes");
-        String[][] tableData = this.mainController.CAlumne.dadesAlumne();
-        JTable table = new JTable(tableData, new String[]{"ID","Nom", "DNI", "Codi"});
-        JButton tornar = new JButton("Tornar");
-        JButton eliminar = new JButton("Eliminar");
-        this.panel.add(llistat);
-        JScrollPane scrollPaneTable = new JScrollPane(table);
-        this.panel.add(scrollPaneTable);
-        this.panel.add(eliminar);
-        eliminar.addActionListener(e-> {
-            if (table.getRowCount() > 0 && !table.getSelectionModel().isSelectionEmpty()){
-                Integer idAlumne = Integer.parseInt((String) table.getValueAt(table.getSelectedRow(),0));
-                this.mainController.CAlumne.eliminarAlumne(idAlumne);
-                // finestra.changePanel(1,4);
-                //finestra.popup("Usuari eliminat correctament");
-            }
-        });
-        this.panel.add(tornar);
-        tornar.addActionListener(e -> crearPanell());
-        this.finestra.changePanel(this.panel);
-    }
 
     private boolean exportData() {
         String[][] getDB = this.mainController.CAlumne.dadesAlumne();
