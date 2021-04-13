@@ -127,7 +127,31 @@ public class ControllerMatricula {
 //        }
 
     }
+    public String[][] getDataTableId() {
+        int numberOfFields = 5;//6-id = 5
+        String[][] tableData = new String[this.contadorMatricules][numberOfFields];
+        try {
+            Statement sentencia = this.connexioBD.createStatement();
+            ResultSet resultado = sentencia.executeQuery("select grupo_clases.id, usuarios.id, matriculas.data_matriculat, matriculas.data_desmatriculat, matriculas.estat from matriculas, usuarios, grupo_clases, alumnos where matriculas.id_alumne = alumnos.id and alumnos.id = usuarios.id and matriculas.id_grup = grupo_clases.id and matriculas.estat = 'actiu'");
 
+            int tableCounter = 0;
+            while (resultado.next()) {
+
+                for (int i = 0; i < numberOfFields; i++) {
+                    tableData[tableCounter][i] = resultado.getString(i + 1);//+1 perque el getString(int) comença desde 1 i no desde 0
+                }
+                tableCounter++;
+            }
+            return tableData;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            Log.log("Error al crear la taula amb les dades (getdatatable)", "ControllerMatricula");
+            tableData[0][0] = "ERROR DB";
+            return tableData;
+        }
+
+    }
     public String[][] getDataTable() {
         int numberOfFields = 6;
         String[][] tableData = new String[this.contadorMatricules][numberOfFields];

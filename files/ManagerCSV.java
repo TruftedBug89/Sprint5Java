@@ -74,11 +74,11 @@ public class ManagerCSV {
         String exportCSVName = "/" + formatter.format(date) + "export" + family.trim() + ".csv";
 
         File csvOutputFile = new File(((idePath) ? csvPathLocation : csvAlternativePath) + exportCSVName);
-        System.out.println("peta aixo a  k si");
-        System.out.println(((idePath) ? csvPathLocation : csvAlternativePath) +" "+ exportCSVName);
+        //System.out.println("peta aixo a  k si");
+        //System.out.println(((idePath) ? csvPathLocation : csvAlternativePath) +" "+ exportCSVName);
         try {
             if (!csvOutputFile.createNewFile())
-                Error.log("No s'ha pogut crear l'arxiu per exportar les dades", "ExportCSV");
+                Error.log("No s'ha pogut crear o ja era creat l'arxiu a exportar les dades", "ExportCSV");
             FileWriter fw = new FileWriter(csvOutputFile, true);
             BufferedWriter bw = new BufferedWriter(fw);
 

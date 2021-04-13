@@ -42,14 +42,14 @@ public class PanelMatricula {
      * @return
      */
     private boolean exportData() {
-        String[][] getDB = this.MainController.CMatricula.getDataTable();
+        String[][] getDB = this.MainController.CMatricula.getDataTableId();
         if (getDB[0][0] == "ERROR DB") {
             this.popUp("Error al exportar,possiblement array buit");
             Error.log("Error al exportar matricules,possiblement array buit", "exportarMatricula");
             return false;
         }
         ArrayList<String[]> export = new ArrayList<>();
-        String[] columnes = {"ID", "ID GRUP", "ID ALUMNE", "DATA MATRICULAT", "DATA DESMATRICULAT", "ESTAT"};
+        String[] columnes = {"ID GRUP", "ID ALUMNE", "DATA MATRICULAT", "DATA DESMATRICULAT", "ESTAT"};
         export.add(columnes);
         Collections.addAll(export, getDB);
         if (ManagerCSV.export(export, "Matricula")) {
@@ -66,25 +66,33 @@ public class PanelMatricula {
 
     /**
      * Aquest mètode importa les dades d'un arxiu a l'aplicacio.
+     *
      * @return
      */
-//    private boolean importData() {
-//        String[][] getDB = this.MainController.CMatricula.getDataTable();
-//
-//        ArrayList<String> dadesImportades = ManagerCSV.importCSV();
+    private boolean importData() {
+        ArrayList<String> dadesImportades = ManagerCSV.importCSV();
+
+
 //        if ( getDB[0][0] == "ERROR DB") return false;
-//        dadesImportades.remove(0);//El·liminem la capçalera
-//        int matriculesImportades = 0;
-//        for (String dada : dadesImportades) {
-//            matriculesImportades++;
-//            String[] data = dada.split(",");
+        dadesImportades.remove(0);//El·liminem la capçalera
+        int matriculesImportades = 0;
+        for (String dada : dadesImportades) {
+            matriculesImportades++;
+            String[] data = dada.split(",");
+            System.out.println(data[3] + data[3].length());
+            this.MainController.CMatricula.altaMatricula(new Matricula(0,Integer.parseInt(data[0])
+                    , Integer.parseInt(data[1])
+                    , Date.valueOf(data[2].substring(0,10))
+                    , ((data[3].length()<10) ? null : Date.valueOf(data[3].substring(0,10)))
+                    , data[4]));
 //            if (data.length < 3) continue;
-//            this.MGestors.GMatricula.altaMatricula(data[1].replace("|",","), data[2].replace("|",","));
-//        }
-//        this.popUp("Importades " + matriculesImportades + " matricules.");
-//        Log.log("Importades " + matriculesImportades + " matricules.", "importMatricula");
-//        return false;
-//    }
+
+//            this.MGestors.GMatricula.altaMatricula(data[1].replace("|", ","), data[2].replace("|", ","));
+        }
+        this.popUp("Importades " + matriculesImportades + " matricules.");
+        Log.log("Importades " + matriculesImportades + " matricules.", "importMatricula");
+        return true;
+    }
 
     /**
      * Panel menú per a les opcions del crud de Matricula
@@ -96,7 +104,7 @@ public class PanelMatricula {
         this.panel.setLayout(distribucio);
         JLabel titol = new JLabel("Matricules:");
         String[][] tableData = this.MainController.CMatricula.getDataTable();
-        JTable table = new JTable(tableData, new String[]{"ID", "GRUP", "ALUMNE", "DATA MATRICULAT", "DATA DESMATRICULAT", "ESTAT"}) {
+        JTable table = new JTable(tableData, new String[]{"ID","GRUP", "ALUMNE", "DATA MATRICULAT", "DATA DESMATRICULAT", "ESTAT"}) {
             public boolean editCellAt(int row, int column, java.util.EventObject e) {
                 return false;
             }
@@ -244,7 +252,7 @@ public class PanelMatricula {
         panelPopUp.setLayout(new GridLayout(3, 1));
         JButton importar = new JButton("Importar CSV");
         importar.addActionListener(e -> {
-//            this.importData();
+            this.importData();
             popUp.dispose();
         });
         JButton exportar = new JButton("Exportar CSV");

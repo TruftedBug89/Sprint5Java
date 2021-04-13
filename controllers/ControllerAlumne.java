@@ -13,7 +13,7 @@ public class ControllerAlumne {
         try {
             this.connexioBD = DriverManager.getConnection("jdbc:mysql://localhost:3306/" + confLoadedDB.get("db.database"), confLoadedDB.get("db.user"), confLoadedDB.get("db.password"));
             Statement sentencia = this.connexioBD.createStatement();
-            ResultSet resultado = sentencia.executeQuery("select * from alumnes, usuarios where usuarios.id = alumnes.id_usuari and usuarios.estat = 'actiu'");
+            ResultSet resultado = sentencia.executeQuery("select * from alumnos, usuarios where usuarios.id = alumnos.id_usuari and usuarios.estat = 'actiu'");
             while (resultado.next()) {
                 this.contadorAlumnes++;
             }
@@ -61,8 +61,8 @@ public class ControllerAlumne {
         String[][] tableData = new String[this.contadorAlumnes][numberOfFields];
         try {
             Statement sentencia = this.connexioBD.createStatement();
-            ResultSet resultado = sentencia.executeQuery("select usuarios.id,usuarios.nom, usuarios.dni, alumnes.codi_Alumne " +
-                    "from usuarios, alumnes where usuarios.id = alumnes.id_usuari AND usuarios.id_roles = 5 AND usuarios.estat = 'actiu'");
+            ResultSet resultado = sentencia.executeQuery("select usuarios.id,usuarios.nom, usuarios.dni, alumnos.codi_Alumne " +
+                    "from usuarios, alumnos where usuarios.id = alumnos.id_usuari AND usuarios.id_roles = 5 AND usuarios.estat = 'actiu'");
 
             int tableCounter = 0;
             while (resultado.next()) {
@@ -101,8 +101,8 @@ public class ControllerAlumne {
         try {
             int numberOfFields = 4;
             Statement sentencia = this.connexioBD.createStatement();
-            ResultSet resultado = sentencia.executeQuery("select usuarios.id,usuarios.nom, usuarios.dni, alumnes.codi_Alumne " +
-                    "from usuarios, alumnes where usuarios.id = alumnes.id_usuari AND usuarios.id_roles = 5");
+            ResultSet resultado = sentencia.executeQuery("select usuarios.id,usuarios.nom, usuarios.dni, alumnos.codi_Alumne " +
+                    "from usuarios, alumnos where usuarios.id = alumnos.id_usuari AND usuarios.id_roles = 5");
 
             export = new String[this.contadorAlumnes];
             while (resultado.next()) {
