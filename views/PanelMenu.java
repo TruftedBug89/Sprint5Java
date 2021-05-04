@@ -33,8 +33,8 @@ public class PanelMenu extends JPanel {
         this.setLayout(distribucio);
         JButton panelCategoria = new JButton("Gestio de Matricules");
         panelCategoria.addActionListener(e -> new PanelMatricula(this.finestra, MainController));
-        JButton panelEmpresa = new JButton("Gestio d'Alumnes");
-//        panelEmpresa.addActionListener(e -> new PanelEmpresa(this.finestra,MGestors));
+        JButton panelAlumne = new JButton("Gestio d'Alumnes");
+        panelAlumne.addActionListener(e -> new PanelAlumne(this.finestra,MainController));
         JButton panelProfessor = new JButton("Gestio de Professors");
         panelProfessor.addActionListener(e -> new PanelProfessor(this.finestra,MainController));
         JButton panelInstitut = new JButton("Gestió de Grups");
@@ -42,7 +42,7 @@ public class PanelMenu extends JPanel {
         JButton exit = new JButton("Sortir");
         exit.addActionListener(e -> this.finestra.dispose());
         this.add(panelCategoria);
-        this.add(panelEmpresa);
+        this.add(panelAlumne);
         this.add(panelProfessor);
         this.add(panelInstitut);
         this.add(exit);

@@ -15,10 +15,10 @@ public class LoadConfig {
     //- seran per a executar desde un ide o desde un jar
     private static final String cfgPathLocation = "src/Sprint5Java/config.cfg";
     private static final String cfgAlternativePath = "config.cfg";
-    private static boolean idePath;//variable que li diu al programa si les rutes
+    private static boolean idePath; //variable que li diu al programa si les rutes (?)
 
     /**
-     * Mètode que carrega la informacio del arxiu .cfg
+     * Mètode que carrega la informació del arxiu .cfg
      *
      * @return retorna un arraylist amb les dades carregades
      */
