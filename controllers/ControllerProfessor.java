@@ -29,7 +29,7 @@ public class ControllerProfessor {
     public boolean altaProfessor(Professor professor){
         try{
             Statement sql = this.connexioBD.createStatement();
-            PreparedStatement psInsertar = this.connexioBD.prepareStatement("INSERT INTO usuarios (id_roles, nom, cognom, segon_cognom, dni, user_name, password, ruta_avatar, email, telefon, data_naixement, estat) " +
+            PreparedStatement psInsertar = this.connexioBD.prepareStatement("INSERT INTO users (id_roles, nom, cognom, segon_cognom, dni, user_name, password, ruta_avatar, email, telefon, data_naixement, estat) " +
                     "VALUES (5, ?, ?, ?,?,?, ?, ?, ?, ?, ?, ?)");
             psInsertar.setString(1,professor.getNom());
             psInsertar.setString(2,"Ferragut");
