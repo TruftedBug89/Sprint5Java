@@ -13,11 +13,8 @@ public class ControllerAlumne {
         try {
             this.connexioBD = DriverManager.getConnection("jdbc:mysql://localhost:3306/" + confLoadedDB.get("db.database"), confLoadedDB.get("db.user"), confLoadedDB.get("db.password"));
             Statement sentencia = this.connexioBD.createStatement();
-<<<<<<< HEAD
             ResultSet resultado = sentencia.executeQuery("select * from alumnos, users where users.id = alumnos.user_id and users.estat = 'actiu'");
-=======
-            ResultSet resultado = sentencia.executeQuery("select * from alumnos, usuarios where usuarios.id = alumnos.id_usuari and usuarios.estat = 'actiu'");
->>>>>>> 8d3f99eae268e277e42e8696265afa2539e3411a
+
             while (resultado.next()) {
                 this.contadorAlumnes++;
             }
@@ -65,13 +62,10 @@ public class ControllerAlumne {
         String[][] tableData = new String[this.contadorAlumnes][numberOfFields];
         try {
             Statement sentencia = this.connexioBD.createStatement();
-<<<<<<< HEAD
+
             ResultSet resultado = sentencia.executeQuery("select users.id,users.nom, users.dni, alumnos.id " +
                     "from users, alumnos where users.id = alumnos.user.id AND users.id_roles = 5 AND users.estat = 'actiu'");
-=======
-            ResultSet resultado = sentencia.executeQuery("select usuarios.id,usuarios.nom, usuarios.dni, alumnos.codi_Alumne " +
-                    "from usuarios, alumnos where usuarios.id = alumnos.id_usuari AND usuarios.id_roles = 5 AND usuarios.estat = 'actiu'");
->>>>>>> 8d3f99eae268e277e42e8696265afa2539e3411a
+
 
             int tableCounter = 0;
             while (resultado.next()) {
@@ -110,13 +104,8 @@ public class ControllerAlumne {
         try {
             int numberOfFields = 4;
             Statement sentencia = this.connexioBD.createStatement();
-<<<<<<< HEAD
             ResultSet resultado = sentencia.executeQuery("select usuarios.id,usuarios.nom, usuarios.dni, alumnes.codi_Alumne " +
                     "from usuarios, alumnes where usuarios.id = alumnes.id_user AND usuarios.id_roles = 5");
-=======
-            ResultSet resultado = sentencia.executeQuery("select usuarios.id,usuarios.nom, usuarios.dni, alumnos.codi_Alumne " +
-                    "from usuarios, alumnos where usuarios.id = alumnos.id_usuari AND usuarios.id_roles = 5");
->>>>>>> 8d3f99eae268e277e42e8696265afa2539e3411a
 
             export = new String[this.contadorAlumnes];
             while (resultado.next()) {
