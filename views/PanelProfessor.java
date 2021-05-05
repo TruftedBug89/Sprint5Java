@@ -51,24 +51,28 @@ public class PanelProfessor {
 
     public void crearProfessor(){
         this.panel = new JPanel();
-        GridLayout distribucio = new GridLayout(4, 2, 2, 2);
+        GridLayout distribucio = new GridLayout(3, 2, 2, 2);
         this.panel.setLayout(distribucio);
         JLabel nom = new JLabel("Nom Professor");
         JLabel dni = new JLabel("DNI Professor");
-        JLabel codi = new JLabel("Codi Professor");
         JTextField textNom = new JTextField();
         JTextField textDni = new JTextField();
-        JTextField textCodi = new JTextField();
         JButton tornar = new JButton("Tornar");
         JButton crear = new JButton("Crear");
         this.panel.add(nom);
         this.panel.add(textNom);
         this.panel.add(dni);
         this.panel.add(textDni);
-        this.panel.add(codi);
-        this.panel.add(textCodi);
         this.panel.add(crear);
-        tornar.addActionListener(e -> this.mainController.CProfessor.altaProfessor(new Professor(textNom.getText(), textDni.getText(), codi.getText())));
+        crear.addActionListener(e -> {
+            if(this.mainController.CProfessor.altaProfessor(new Professor(textNom.getText(), textDni.getText(), "hola"))){
+                this.info("S'ha creat correctament.");
+            }
+            else {
+                this.info("Falten camps per emplenar.");
+            }
+            crearPanell();
+        });
         this.panel.add(tornar);
         tornar.addActionListener(e -> crearPanell());
         this.finestra.changePanel(this.panel);
@@ -80,7 +84,7 @@ public class PanelProfessor {
         this.panel.setLayout(distribucio);
         JLabel llistat = new JLabel("Llistat de professors");
         String[][] tableData = this.mainController.CProfessor.dadesProfessor();
-        JTable table = new JTable(tableData, new String[]{"ID","Nom", "DNI", "Codi"});
+        JTable table = new JTable(tableData, new String[]{"ID","Nom", "DNI"});
         JButton tornar = new JButton("Tornar");
         this.panel.add(llistat);
 
@@ -97,27 +101,28 @@ public class PanelProfessor {
         this.panel.setLayout(distribucio);
         JLabel llistat = new JLabel("Llistat de professors");
         String[][] tableData = this.mainController.CProfessor.dadesProfessor();
-        JTable table = new JTable(tableData, new String[]{"ID","Nom", "DNI", "Codi"});
+        JTable table = new JTable(tableData, new String[]{"ID","Nom", "DNI"});
         JButton tornar = new JButton("Tornar");
         JButton modificar = new JButton("Modificar");
         this.panel.add(llistat);
         JScrollPane scrollPaneTable = new JScrollPane(table);
         this.panel.add(scrollPaneTable);
         this.panel.add(modificar);
+
         modificar.addActionListener(e-> {
             if (table.getRowCount() > 0){
                 for(Integer i = 0;i<tableData.length;i++) {
                     Integer id = Integer.parseInt((String) table.getValueAt(i, 0));
                     String nom = (String) table.getValueAt(i, 1);
                     String dni = (String) table.getValueAt(i, 2);
-                    String codi = (String) table.getValueAt(i, 3);
                     System.out.println(id);
                     System.out.println(nom);
-                    this.mainController.CProfessor.modificarProfessor(id, nom, dni, codi);
+                    this.mainController.CProfessor.modificarProfessor(id, nom, dni, "Hola");
                 }
+                crearPanell();
+                this.info("Professor modicat correctament.");
             } else {
-                //this.LOGGER.warning("No s'ha pogut modificar l'alumne, cap registre seleccionat.");
-                //finestra.popup("Cap registre seleccionat actualment");
+                this.info("No s'ha pogut modificar.");
             }
         });
         this.panel.add(tornar);
@@ -131,7 +136,7 @@ public class PanelProfessor {
         this.panel.setLayout(distribucio);
         JLabel llistat = new JLabel("Llistat de professors");
         String[][] tableData = this.mainController.CProfessor.dadesProfessor();
-        JTable table = new JTable(tableData, new String[]{"ID","Nom", "DNI", "Codi"});
+        JTable table = new JTable(tableData, new String[]{"ID","Nom", "DNI"});
         JButton tornar = new JButton("Tornar");
         JButton eliminar = new JButton("Eliminar");
         this.panel.add(llistat);
@@ -141,9 +146,15 @@ public class PanelProfessor {
         eliminar.addActionListener(e-> {
             if (table.getRowCount() > 0 && !table.getSelectionModel().isSelectionEmpty()){
                 Integer idAlumne = Integer.parseInt((String) table.getValueAt(table.getSelectedRow(),0));
-                this.mainController.CProfessor.eliminarProfessor(idAlumne);
-               // finestra.changePanel(1,4);
-                //finestra.popup("Usuari eliminat correctament");
+                if(this.mainController.CProfessor.eliminarProfessor(idAlumne)){
+                    this.info("S'ha eliminat correctament");
+                    crearPanell();
+                }
+                else {
+                    this.info("No s'ha pogut eliminar");
+                    crearPanell();
+                }
+
             }
         });
         this.panel.add(tornar);
@@ -165,7 +176,7 @@ public class PanelProfessor {
             Log.log("S'han exportat les professors correctament", "exportProfessor");
             return true;
         } else {
-            Error.log("Error al exportar professors, array buit", "exportarProfessor");
+            Error.log("Error a l'exportar professors, array buit", "exportarProfessor");
             return false;
         }
 
@@ -183,6 +194,7 @@ public class PanelProfessor {
         JButton exportar = new JButton("Exportar CSV");
         exportar.addActionListener(e -> {
             this.exportData();
+            this.info("S'han exportat els professors");
             popUp.dispose();
         });
         JButton continueButton = new JButton("Sortir");
@@ -194,5 +206,7 @@ public class PanelProfessor {
 //        panelPopUp.add(avis);
         popUp.changePanel(panelPopUp);
     }
-
+    public void info(String text){
+        JOptionPane.showMessageDialog(null, text);
+    }
 }

@@ -1,8 +1,9 @@
 package Sprint5Java.controllers;
 
-import Sprint5Java.logManager.Log;
+import Sprint5Java.logManager.*;
 import Sprint5Java.models.Professor;
 
+import javax.swing.*;
 import java.sql.*;
 import java.util.HashMap;
 
@@ -13,7 +14,7 @@ public class ControllerProfessor {
         try {
             this.connexioBD = DriverManager.getConnection("jdbc:mysql://localhost:3306/" + confLoadedDB.get("db.database"), confLoadedDB.get("db.user"), confLoadedDB.get("db.password"));
             Statement sentencia = this.connexioBD.createStatement();
-            ResultSet resultado = sentencia.executeQuery("select * from profesors, usuarios where usuarios.id = profesors.id_usuari and usuarios.estat = 'actiu'");
+            ResultSet resultado = sentencia.executeQuery("select * from users where users.estat = 'actiu'");
             while (resultado.next()) {
                 this.contadorProfessors++;
             }
@@ -28,41 +29,46 @@ public class ControllerProfessor {
 
     public boolean altaProfessor(Professor professor){
         try{
-            Statement sql = this.connexioBD.createStatement();
-            PreparedStatement psInsertar = this.connexioBD.prepareStatement("INSERT INTO users (id_roles, nom, cognom, segon_cognom, dni, user_name, password, ruta_avatar, email, telefon, data_naixement, estat) " +
-                    "VALUES (5, ?, ?, ?,?,?, ?, ?, ?, ?, ?, ?)");
-            psInsertar.setString(1,professor.getNom());
-            psInsertar.setString(2,"Ferragut");
-            psInsertar.setString(3,"Garcia");
-            psInsertar.setString(4,professor.getDni());
-            psInsertar.setString(5,"joelferragut");
-            psInsertar.setString(6,"joelferragut");
-            psInsertar.setString(7,"default.jpg");
-            psInsertar.setString(8,"joelferragut");
-            psInsertar.setString(9,"693859056");
-            psInsertar.setString(10,"1999-03-14");
-            psInsertar.setString(11,"actiu");
-            psInsertar.executeUpdate();
-            /*int resultat = sql.executeUpdate(
-                    "INSERT INTO usuarios (id_roles, nom, cognom, segon_cognom, dni, user_name, password, ruta_avatar, email, telefon, data_naixement, estat) " +
-                            "VALUES (5," + professor.getNom()+", Ferragut, Garcia,"+professor.getDni()+",joelferragut, $2y$10$OARgkagA5zjp4ReLNxy7je.Vo1OrnKQ/OcjGlpHxPob/5aAF7A4mi, default.jpg, joelferragut, 693859056, 1999-03-14, actiu)");*/
-            System.out.println("S'ha creat profe");
-            return true;
+            if(professor.getNom().length() > 0 && professor.getDni().length() > 0){
+                Statement sql = this.connexioBD.createStatement();
+                PreparedStatement psInsertar = this.connexioBD.prepareStatement("INSERT INTO users (id_roles, nom, cognom, segon_cognom, dni, user_name, password, ruta_avatar, email, telefon, data_naixement, estat) " +
+                        "VALUES (5, ?, ?, ?,?,?, ?, ?, ?, ?, ?, ?)");
+                psInsertar.setString(1,professor.getNom());
+                psInsertar.setString(2,"Ferragut");
+                psInsertar.setString(3,"Garcia");
+                psInsertar.setString(4,professor.getDni());
+                psInsertar.setString(5,"joelferragut");
+                psInsertar.setString(6,"joelferragut");
+                psInsertar.setString(7,"default.jpg");
+                psInsertar.setString(8,"joelferragut");
+                psInsertar.setString(9,"693859056");
+                psInsertar.setString(10,"1999-03-14");
+                psInsertar.setString(11,"actiu");
+                psInsertar.executeUpdate();
+                System.out.println("S'ha creat profe");
+                Log.log("Creat un professor", "ControllerProfessor");
+                return true;
+            }
+            else {
+                Sprint5Java.logManager.Error.log("Error al crear professor. Camps buits", "ControllerProfessor");
+                return false;
+            }
+
         }
         catch (Exception e){
             e.printStackTrace();
-            Log.log("Error al donar d'alta un professor", "ControllerProfessor");
+            Sprint5Java.logManager.Error.log("Error al donar d'alta un professor. No s'ha pogut accedir a la base de dades", "ControllerProfessor");
             return false;
         }
     }
 
     public String[][] dadesProfessor() {
-        int numberOfFields = 4;
+        int numberOfFields = 3;
         String[][] tableData = new String[this.contadorProfessors][numberOfFields];
         try {
             Statement sentencia = this.connexioBD.createStatement();
-            ResultSet resultado = sentencia.executeQuery("select usuarios.id,usuarios.nom, usuarios.dni, profesors.codi_professor " +
-                    "from usuarios, profesors where usuarios.id = profesors.id_usuari AND usuarios.id_roles = 5 AND usuarios.estat = 'actiu'");
+            ResultSet resultado = sentencia.executeQuery("select users.id,users.nom, users.dni " +
+                    "from users where users.id_roles = 5 AND users.estat = 'actiu'");
 
             int tableCounter = 0;
             while (resultado.next()) {
@@ -83,36 +89,39 @@ public class ControllerProfessor {
             String[] profe = {nom,dni};
             Statement sentencia = this.connexioBD.createStatement();
             PreparedStatement stmt;
-            stmt = this.connexioBD.prepareStatement("UPDATE usuarios SET nom=?, dni=? WHERE id=?");
+            stmt = this.connexioBD.prepareStatement("UPDATE users SET nom=?, dni=? WHERE id=?");
             for (Integer i = 0; i < profe.length; i++){
                 stmt.setString(i+1,profe[i]);
             }
             stmt.setString(3,Integer.toString(id));
             stmt.executeUpdate();
+            Log.log("Professors modificat", "ControllerProfessor");
         }catch (SQLException e){
+            Sprint5Java.logManager.Error.log("Error al modificar professor. No s'ha pogut connectar a la base de dades.", "ControllerProfessor");
             e.printStackTrace();
         }
 
 
     }
 
-    public void eliminarProfessor(Integer id) {
+    public boolean eliminarProfessor(Integer id) {
         try{
             Statement sentencia = this.connexioBD.createStatement();
-            /*String sqlProfe = "DELETE FROM profesors where id_usuari = "+id;
-            int resul = sentencia.executeUpdate(sqlProfe);*/
-            String sql = "UPDATE usuarios set estat='inactiu' where id = "+id;
-            System.out.println("La id "+id);
+            String sql = "UPDATE users set estat='inactiu' where id = "+id;
             int resultat = sentencia.executeUpdate(sql);
             if (resultat <1){
-                System.out.println("No s'ha eliminat");
+                Sprint5Java.logManager.Error.log("Error a l'eliminar el professor amb id-> "+id,"ControllerProfessor");
+               return false;
             }
             else {
-                System.out.println("S'ha eliminat");
+                Log.log("Eliminat el professor-> "+id,"ControllerProfessor");
+                return true;
             }
         }
         catch (SQLException e){
+            Sprint5Java.logManager.Error.log("Error al connectar-se a la base de dades","ControllerProfessor");
             e.printStackTrace();
+            return false;
         }
     }
 
@@ -121,8 +130,8 @@ public class ControllerProfessor {
         try {
             int numberOfFields = 4;
             Statement sentencia = this.connexioBD.createStatement();
-            ResultSet resultado = sentencia.executeQuery("select usuarios.id,usuarios.nom, usuarios.dni, profesors.codi_professor " +
-                    "from usuarios, profesors where usuarios.id = profesors.id_usuari AND usuarios.id_roles = 5");
+            ResultSet resultado = sentencia.executeQuery("select users.id, users.nom, users.dni," +
+                    "from users where users.id_roles = 5");
 
             export = new String[this.contadorProfessors];
             while (resultado.next()) {
