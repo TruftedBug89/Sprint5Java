@@ -4,10 +4,12 @@ import Sprint5Java.controllers.MainController;
 import Sprint5Java.files.ManagerCSV;
 import Sprint5Java.logManager.Error;
 import Sprint5Java.logManager.Log;
+import Sprint5Java.models.Matricula;
 import Sprint5Java.models.Professor;
 
 import javax.swing.*;
 import java.awt.*;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -169,7 +171,7 @@ public class PanelProfessor {
             return false;
         }
         ArrayList<String[]> export = new ArrayList<>();
-        String[] columnes = {"ID", "NOM", "DNI", "CODI"};
+        String[] columnes = {"ID", "NOM", "DNI"};
         export.add(columnes);
         Collections.addAll(export, getDB);
         if (ManagerCSV.export(export, "Professor")) {
@@ -182,13 +184,33 @@ public class PanelProfessor {
 
     }
 
+    private boolean importData() {
+        ArrayList<String> dadesImportades = ManagerCSV.importCSV();
+
+
+//        if ( getDB[0][0] == "ERROR DB") return false;
+        System.out.println(dadesImportades.get(0));
+        dadesImportades.remove(0);//El·liminem la capçalera
+        int professorsImportats = 0;
+        for (String dada : dadesImportades) {
+            professorsImportats++;
+            String[] data = dada.split(",");
+            System.out.println(data[3] + data[3].length());
+            this.mainController.CProfessor.altaProfessor(new Professor(data[1],data[2],"Hola"));
+        }
+        this.info("Importades " + professorsImportats + " matricules.");
+        Log.log("Importades " + professorsImportats + " matricules.", "importMatricula");
+        return true;
+    }
+
+
     private void importExportPopUp() {
         Finestra popUp = new Finestra(300, 450, "Importar/Exportar");
         JPanel panelPopUp = new JPanel();
         panelPopUp.setLayout(new GridLayout(3, 1));
         JButton importar = new JButton("Importar CSV");
         importar.addActionListener(e -> {
-//            this.importData();
+            this.importData();
             popUp.dispose();
         });
         JButton exportar = new JButton("Exportar CSV");
