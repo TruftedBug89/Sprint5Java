@@ -13,11 +13,9 @@ public class ControllerAlumne {
         try {
             this.connexioBD = DriverManager.getConnection("jdbc:mysql://localhost:3306/" + confLoadedDB.get("db.database"), confLoadedDB.get("db.user"), confLoadedDB.get("db.password"));
             Statement sentencia = this.connexioBD.createStatement();
-<<<<<<< HEAD
-            ResultSet resultado = sentencia.executeQuery("select * from alumnos, users where users.id = alumnos.user_id and users.estat = 'actiu'");
-=======
+
             ResultSet resultado = sentencia.executeQuery("select * from alumnos, usuarios where usuarios.id = alumnos.id_usuari and usuarios.estat = 'actiu'");
->>>>>>> 8d3f99eae268e277e42e8696265afa2539e3411a
+
             while (resultado.next()) {
                 this.contadorAlumnes++;
             }
@@ -29,28 +27,25 @@ public class ControllerAlumne {
 
     }
 
-
     public boolean altaAlumne(Alumne Alumne){
         try{
             Statement sql = this.connexioBD.createStatement();
             PreparedStatement psInsertar = this.connexioBD.prepareStatement("INSERT INTO users (id_roles, nom, cognom, segon_cognom, dni, user_name, password, ruta_avatar, email, telefon, data_naixement, estat) " +
                     "VALUES (5, ?, ?, ?,?,?, ?, ?, ?, ?, ?, ?)");
             psInsertar.setString(1,Alumne.getNom());
-            psInsertar.setString(2,"Ferragut");
-            psInsertar.setString(3,"Garcia");
+            psInsertar.setString(2,"El Khattabi");
+            psInsertar.setString(3,"Gatai");
             psInsertar.setString(4,Alumne.getDni());
-            psInsertar.setString(5,"joelferragut");
-            psInsertar.setString(6,"joelferragut");
+            psInsertar.setString(5,"anwarekg");
+            psInsertar.setString(6,"anwarekg");
             psInsertar.setString(7,"default.jpg");
             psInsertar.setString(8,"joelferragut");
-            psInsertar.setString(9,"693859056");
-            psInsertar.setString(10,"1999-03-14");
+            psInsertar.setString(9,"684071540");
+            psInsertar.setString(10,"1995-09-12");
             psInsertar.setString(11,"actiu");
             psInsertar.executeUpdate();
-            /*int resultat = sql.executeUpdate(
-                    "INSERT INTO usuarios (id_roles, nom, cognom, segon_cognom, dni, user_name, password, ruta_avatar, email, telefon, data_naixement, estat) " +
-                            "VALUES (5," + Alumne.getNom()+", Ferragut, Garcia,"+Alumne.getDni()+",joelferragut, $2y$10$OARgkagA5zjp4ReLNxy7je.Vo1OrnKQ/OcjGlpHxPob/5aAF7A4mi, default.jpg, joelferragut, 693859056, 1999-03-14, actiu)");*/
-            System.out.println("S'ha creat l'alumne");
+
+            System.out.println("S'ha registrar l'alumne correctament");
             return true;
         }
         catch (Exception e){
@@ -65,13 +60,9 @@ public class ControllerAlumne {
         String[][] tableData = new String[this.contadorAlumnes][numberOfFields];
         try {
             Statement sentencia = this.connexioBD.createStatement();
-<<<<<<< HEAD
-            ResultSet resultado = sentencia.executeQuery("select users.id,users.nom, users.dni, alumnos.id " +
-                    "from users, alumnos where users.id = alumnos.user.id AND users.id_roles = 5 AND users.estat = 'actiu'");
-=======
+
             ResultSet resultado = sentencia.executeQuery("select usuarios.id,usuarios.nom, usuarios.dni, alumnos.codi_Alumne " +
                     "from usuarios, alumnos where usuarios.id = alumnos.id_usuari AND usuarios.id_roles = 5 AND usuarios.estat = 'actiu'");
->>>>>>> 8d3f99eae268e277e42e8696265afa2539e3411a
 
             int tableCounter = 0;
             while (resultado.next()) {
@@ -110,13 +101,9 @@ public class ControllerAlumne {
         try {
             int numberOfFields = 4;
             Statement sentencia = this.connexioBD.createStatement();
-<<<<<<< HEAD
-            ResultSet resultado = sentencia.executeQuery("select usuarios.id,usuarios.nom, usuarios.dni, alumnes.codi_Alumne " +
-                    "from usuarios, alumnes where usuarios.id = alumnes.id_user AND usuarios.id_roles = 5");
-=======
+
             ResultSet resultado = sentencia.executeQuery("select usuarios.id,usuarios.nom, usuarios.dni, alumnos.codi_Alumne " +
                     "from usuarios, alumnos where usuarios.id = alumnos.id_usuari AND usuarios.id_roles = 5");
->>>>>>> 8d3f99eae268e277e42e8696265afa2539e3411a
 
             export = new String[this.contadorAlumnes];
             while (resultado.next()) {
