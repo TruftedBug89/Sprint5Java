@@ -65,7 +65,7 @@ public class PanelAlumne {
         this.panel.add(codi);
         this.panel.add(textCodi);
         this.panel.add(crear);
-        tornar.addActionListener(e -> this.mainController.CAlumne.altaAlumne(new Alumne(textNom.getText(), textDni.getText(), codi.getText())));
+        crear.addActionListener(e -> this.mainController.CAlumne.altaAlumne(new Alumne(textNom.getText(), textDni.getText(), codi.getText())));
         this.panel.add(tornar);
         tornar.addActionListener(e -> crearPanell());
         this.finestra.changePanel(this.panel);
@@ -77,7 +77,7 @@ public class PanelAlumne {
         this.panel.setLayout(distribucio);
         JLabel llistat = new JLabel("Llistat d'Alumnes");
         String[][] tableData = this.mainController.CAlumne.dadesAlumne();
-        JTable table = new JTable(tableData, new String[]{"ID","Nom", "DNI", "Codi"});
+        JTable table = new JTable(tableData, new String[]{"ID","Nom", "DNI"});
         JButton tornar = new JButton("Tornar");
         this.panel.add(llistat);
 
