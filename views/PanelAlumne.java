@@ -28,7 +28,7 @@ public class PanelAlumne {
     /*Aquí es crea la primera interfície al fer click sobre "Gestió d'Alumne"*/
     public void crearPanell(){
         this.panel = new JPanel();
-        GridLayout distribucio = new GridLayout(6, 1, 2, 2);
+        GridLayout distribucio = new GridLayout(4, 1, 2, 2);
         this.panel.setLayout(distribucio);
         JButton crear = new JButton("Crear Alumnes");
         JButton llistar = new JButton("Llistar Alumnes");

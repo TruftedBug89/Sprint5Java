@@ -31,13 +31,13 @@ public class PanelMenu extends JPanel {
 
         GridLayout distribucio = new GridLayout(5, 1);
         this.setLayout(distribucio);
-        JButton panelCategoria = new JButton("Gestio de Matricules");
+        JButton panelCategoria = new JButton("Gestio de Matricules (obsolet)");
         panelCategoria.addActionListener(e -> new PanelMatricula(this.finestra, MainController));
         JButton panelAlumne = new JButton("Gestio d'Alumnes");
         panelAlumne.addActionListener(e -> new PanelAlumne(this.finestra,MainController));
         JButton panelProfessor = new JButton("Gestio de Professors");
         panelProfessor.addActionListener(e -> new PanelProfessor(this.finestra,MainController));
-        JButton panelInstitut = new JButton("Gestió de Grups");
+        JButton panelInstitut = new JButton("Gestió de Grups (manteniment)");
 //        panelInstitut.addActionListener(e -> new PanelInstitut(this.finestra,MGestors));
         JButton exit = new JButton("Sortir");
         exit.addActionListener(e -> this.finestra.dispose());
